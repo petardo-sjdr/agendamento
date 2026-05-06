@@ -128,7 +128,39 @@ export default function QuotePage() {
         return (a.display_order || 0) - (b.display_order || 0);
       });
       
-      setFields(filteredFields);
+      const { data: baseRules } = await supabase
+        .from('pricing_rules')
+        .select('*')
+        .eq('service_id', quoteData.service_id)
+        .in('rule_name', ['Preço Base - Horário Comercial', 'Preço Base - Plantão']);
+
+      let finalFields = [...filteredFields];
+
+      if (baseRules && baseRules.length > 0) {
+        const ruleCom = baseRules.find(r => r.rule_name === 'Preço Base - Horário Comercial');
+        const ruleOut = baseRules.find(r => r.rule_name === 'Preço Base - Plantão');
+        
+        finalFields.push({
+          id: 'sys-horario',
+          service_id: quoteData.service_id,
+          field_key: 'sys_horario_atendimento',
+          field_label: 'Para quando você precisa do atendimento?',
+          field_type: 'radio',
+          field_options: [
+            { label: 'Horário Comercial', price: ruleCom?.base_price || 0, manual_review: false },
+            { label: 'Plantão (Noites, Dom, Feriados)', price: ruleOut?.base_price || 0, manual_review: false }
+          ],
+          placeholder: '',
+          helper_text: 'O valor do serviço pode variar de acordo com o horário selecionado.',
+          is_required: true,
+          display_order: 9999,
+          applies_to: 'both',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+      }
+
+      setFields(finalFields);
 
       // Pre-fill form data if exists
       if (quoteData.form_data && Object.keys(quoteData.form_data).length > 0) {
@@ -180,7 +212,10 @@ export default function QuotePage() {
         .order('priority');
 
       const applicableRules = (rules || []).filter(r =>
-        r.customer_type === 'both' || r.customer_type === quote!.customer_type
+        (r.customer_type === 'both' || r.customer_type === quote!.customer_type) &&
+        r.rule_name !== 'Preço Base do Serviço' &&
+        r.rule_name !== 'Preço Base - Horário Comercial' &&
+        r.rule_name !== 'Preço Base - Plantão'
       );
 
       let total = 0;

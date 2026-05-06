@@ -37,8 +37,11 @@ export default function FieldsAdmin() {
   const [saving, setSaving] = useState(false);
   const [optionInput, setOptionInput] = useState('');
   
-  const [basePrice, setBasePrice] = useState(0);
-  const [basePriceRuleId, setBasePriceRuleId] = useState<string | null>(null);
+  const [basePriceCom, setBasePriceCom] = useState(0);
+  const [basePriceComRuleId, setBasePriceComRuleId] = useState<string | null>(null);
+  
+  const [basePriceOut, setBasePriceOut] = useState(0);
+  const [basePriceOutRuleId, setBasePriceOutRuleId] = useState<string | null>(null);
 
   useEffect(() => {
     if (serviceId) loadData();
@@ -52,14 +55,23 @@ export default function FieldsAdmin() {
     ] = await Promise.all([
       supabase.from('services').select('*').eq('id', serviceId).single(),
       supabase.from('service_fields').select('*').eq('service_id', serviceId).order('display_order'),
-      supabase.from('pricing_rules').select('*').eq('service_id', serviceId).eq('rule_name', 'Preço Base do Serviço').maybeSingle()
+      supabase.from('pricing_rules').select('*').eq('service_id', serviceId).in('rule_name', ['Preço Base - Horário Comercial', 'Preço Base - Plantão'])
     ]);
     
     setService(svc);
     setFields(flds || []);
     if (rules) {
-      setBasePrice(rules.base_price || 0);
-      setBasePriceRuleId(rules.id);
+      const ruleCom = rules.find((r: any) => r.rule_name === 'Preço Base - Horário Comercial');
+      if (ruleCom) {
+        setBasePriceCom(ruleCom.base_price || 0);
+        setBasePriceComRuleId(ruleCom.id);
+      }
+      
+      const ruleOut = rules.find((r: any) => r.rule_name === 'Preço Base - Plantão');
+      if (ruleOut) {
+        setBasePriceOut(ruleOut.base_price || 0);
+        setBasePriceOutRuleId(ruleOut.id);
+      }
     }
     setLoading(false);
   };
@@ -177,19 +189,36 @@ export default function FieldsAdmin() {
     }
   };
 
-  const saveBasePrice = async () => {
-    if (basePriceRuleId) {
-      await supabase.from('pricing_rules').update({ base_price: basePrice }).eq('id', basePriceRuleId);
+  const saveBasePrices = async () => {
+    const promises = [];
+    
+    // Comercial
+    if (basePriceComRuleId) {
+      promises.push(supabase.from('pricing_rules').update({ base_price: basePriceCom }).eq('id', basePriceComRuleId));
     } else {
-      const { data } = await supabase.from('pricing_rules').insert({
+      promises.push(supabase.from('pricing_rules').insert({
         service_id: serviceId,
-        rule_name: 'Preço Base do Serviço',
-        base_price: basePrice,
+        rule_name: 'Preço Base - Horário Comercial',
+        base_price: basePriceCom,
         customer_type: 'both'
-      }).select().single();
-      if (data) setBasePriceRuleId(data.id);
+      }));
     }
-    alert('Preço Base atualizado com sucesso!');
+    
+    // Plantão
+    if (basePriceOutRuleId) {
+      promises.push(supabase.from('pricing_rules').update({ base_price: basePriceOut }).eq('id', basePriceOutRuleId));
+    } else {
+      promises.push(supabase.from('pricing_rules').insert({
+        service_id: serviceId,
+        rule_name: 'Preço Base - Plantão',
+        base_price: basePriceOut,
+        customer_type: 'both'
+      }));
+    }
+    
+    await Promise.all(promises);
+    alert('Preços Base atualizados com sucesso!');
+    loadData();
   };
 
   const showOptions = editingField?.field_type === 'select' || editingField?.field_type === 'radio' || editingField?.field_type === 'checkbox';
@@ -214,18 +243,38 @@ export default function FieldsAdmin() {
       </div>
 
       {/* Preço Base Section */}
-      <div className="glass-panel" style={{ marginBottom: '2rem', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+      <div className="glass-panel" style={{ marginBottom: '2rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Preço Base do Serviço</h3>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Valor inicial cobrado independente das respostas (Ex: Taxa mínima de visita)</p>
+          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Valores Padrão do Atendimento</h3>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Defina o preço base conforme o horário. O sistema já vai adicionar a pergunta de Horário automaticamente para o cliente.</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
-          <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>R$</span>
-          <input className="input-field" type="number" step="0.01" style={{ maxWidth: '120px', margin: 0 }}
-            value={basePrice === 0 ? '' : basePrice}
-            onChange={e => setBasePrice(parseFloat(e.target.value) || 0)}
-            placeholder="0,00" />
-          <button className="btn btn-outline" onClick={saveBasePrice}>Salvar</button>
+        
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <label className="input-label" style={{ fontSize: '0.9rem' }}>Horário Comercial</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>R$</span>
+              <input className="input-field" type="number" step="0.01" style={{ margin: 0 }}
+                value={basePriceCom === 0 ? '' : basePriceCom}
+                onChange={e => setBasePriceCom(parseFloat(e.target.value) || 0)}
+                placeholder="0,00" />
+            </div>
+          </div>
+          
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <label className="input-label" style={{ fontSize: '0.9rem' }}>Plantão (Fora do Horário)</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>R$</span>
+              <input className="input-field" type="number" step="0.01" style={{ margin: 0 }}
+                value={basePriceOut === 0 ? '' : basePriceOut}
+                onChange={e => setBasePriceOut(parseFloat(e.target.value) || 0)}
+                placeholder="0,00" />
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+          <button className="btn btn-outline" onClick={saveBasePrices}>Salvar Preços</button>
         </div>
       </div>
 
