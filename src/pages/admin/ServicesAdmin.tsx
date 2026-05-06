@@ -130,7 +130,7 @@ export default function ServicesAdmin() {
   };
 
   const filtered = services.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase())
+    s.slug !== 'global-config' && s.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const IconComponent = (name: string) => {
@@ -145,10 +145,19 @@ export default function ServicesAdmin() {
           <h1>Serviços</h1>
           <p>Gerencie os serviços oferecidos pela PETARDO</p>
         </div>
-        <button className="btn btn-primary" onClick={openCreate}>
-          <Plus size={18} />
-          Novo Serviço
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className="btn btn-outline" onClick={() => {
+            const globalSvc = services.find(s => s.slug === 'global-config');
+            if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/campos`);
+          }}>
+            <ListTree size={18} />
+            Campos Globais
+          </button>
+          <button className="btn btn-primary" onClick={openCreate}>
+            <Plus size={18} />
+            Novo Serviço
+          </button>
+        </div>
       </div>
 
       {/* Search */}

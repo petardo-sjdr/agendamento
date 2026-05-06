@@ -96,11 +96,21 @@ export default function QuotePage() {
       }
       setService(svc);
 
-      // Load fields filtered by customer_type
+      // Get Global service ID
+      const { data: globalSvc } = await supabase
+        .from('services')
+        .select('id')
+        .eq('slug', 'global-config')
+        .single();
+      
+      const serviceIds = [quoteData.service_id];
+      if (globalSvc) serviceIds.push(globalSvc.id);
+
+      // Load fields filtered by customer_type (Global + Specific)
       const { data: flds } = await supabase
         .from('service_fields')
         .select('*')
-        .eq('service_id', quoteData.service_id)
+        .in('service_id', serviceIds)
         .order('display_order');
 
       const filteredFields = (flds || []).filter(f =>
@@ -139,11 +149,21 @@ export default function QuotePage() {
     setStep('calculating');
 
     try {
-      // Load pricing rules
+      // Get Global service ID
+      const { data: globalSvc } = await supabase
+        .from('services')
+        .select('id')
+        .eq('slug', 'global-config')
+        .single();
+      
+      const serviceIds = [quote!.service_id];
+      if (globalSvc) serviceIds.push(globalSvc.id);
+
+      // Load pricing rules (Global + Specific)
       const { data: rules } = await supabase
         .from('pricing_rules')
         .select('*')
-        .eq('service_id', quote!.service_id)
+        .in('service_id', serviceIds)
         .eq('is_active', true)
         .order('priority');
 
@@ -153,6 +173,8 @@ export default function QuotePage() {
 
       let total = 0;
       const breakdown: Array<{ label: string; value: number }> = [];
+
+      let forceManual = false;
 
       // Apply each rule
       for (const rule of applicableRules) {
@@ -197,10 +219,20 @@ export default function QuotePage() {
           }
         }
 
+        // Action: Force Manual Review (represented by base_price = -1)
+        if (ruleValue === -1 || rule.base_price === -1) {
+          forceManual = true;
+          break;
+        }
+
         if (ruleValue > 0) {
           breakdown.push({ label: rule.rule_name, value: ruleValue });
           total += ruleValue;
         }
+      }
+
+      if (forceManual) {
+        total = 0; // Forces the UI to show manual review state
       }
 
       // If no rules matched, use a default

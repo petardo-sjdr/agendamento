@@ -125,7 +125,7 @@ export default function PricingAdmin() {
               <div className="rule-card-left">
                 <div className="rule-price-badge">
                   <DollarSign size={18} />
-                  <span>R$ {Number(rule.base_price).toFixed(2)}</span>
+                  <span>{Number(rule.base_price) === -1 ? 'Orçamento Manual' : `R$ ${Number(rule.base_price).toFixed(2)}`}</span>
                 </div>
                 <div className="rule-info">
                   <h4>{rule.rule_name}</h4>
@@ -178,8 +178,14 @@ export default function PricingAdmin() {
                 <div className="input-group">
                   <label className="input-label">Preço Base (R$)</label>
                   <input className="input-field" type="number" step="0.01"
-                    value={editingRule.base_price ?? 0}
+                    disabled={editingRule.base_price === -1}
+                    value={editingRule.base_price === -1 ? '' : (editingRule.base_price ?? 0)}
                     onChange={e => setEditingRule({ ...editingRule, base_price: parseFloat(e.target.value) || 0 })} />
+                  <label className="toggle-label" style={{ marginTop: '0.5rem' }}>
+                    <input type="checkbox" checked={editingRule.base_price === -1}
+                      onChange={e => setEditingRule({ ...editingRule, base_price: e.target.checked ? -1 : 0 })} />
+                    <span style={{ color: 'var(--text-warning)', fontSize: '0.85rem' }}>Forçar Orçamento Manual</span>
+                  </label>
                 </div>
                 <div className="input-group">
                   <label className="input-label">Tipo de Cliente</label>
