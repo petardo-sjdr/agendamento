@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import type { Service, PricingRule } from '../../lib/types';
+import type { Service, PricingRule, ServiceField } from '../../lib/types';
 import { ArrowLeft, Plus, Edit, Trash2, DollarSign, ToggleLeft, ToggleRight } from 'lucide-react';
 import './PricingAdmin.css';
 
@@ -13,6 +13,7 @@ export default function PricingAdmin() {
   const [loading, setLoading] = useState(true);
   const [editModal, setEditModal] = useState(false);
   const [editingRule, setEditingRule] = useState<Partial<PricingRule> | null>(null);
+  const [fields, setFields] = useState<ServiceField[]>([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -20,12 +21,14 @@ export default function PricingAdmin() {
   }, [serviceId]);
 
   const loadData = async () => {
-    const [{ data: svc }, { data: rls }] = await Promise.all([
+    const [{ data: svc }, { data: rls }, { data: flds }] = await Promise.all([
       supabase.from('services').select('*').eq('id', serviceId).single(),
       supabase.from('pricing_rules').select('*').eq('service_id', serviceId).order('priority'),
+      supabase.from('service_fields').select('*').eq('service_id', serviceId).order('display_order'),
     ]);
     setService(svc);
     setRules(rls || []);
+    setFields(flds || []);
     setLoading(false);
   };
 
@@ -200,6 +203,73 @@ export default function PricingAdmin() {
                       onChange={e => setEditingRule({ ...editingRule, is_active: e.target.checked })} />
                     <span>Ativa</span>
                   </label>
+                </div>
+              </div>
+
+              {/* LÓGICA AVANÇADA */}
+              <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-light)' }}>
+                <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Lógica da Regra</h3>
+                
+                <div className="input-group">
+                  <label className="input-label">Aplicar esta regra APENAS SE (Opcional)</label>
+                  <div className="input-row" style={{ gap: '0.5rem' }}>
+                    <select className="input-field" style={{ flex: 1 }}
+                      value={(editingRule.rule_logic as any)?.conditions?.[0]?.field || ''}
+                      onChange={e => {
+                        const val = e.target.value;
+                        const logic = { ...(editingRule.rule_logic as any) || {} };
+                        if (!val) {
+                          delete logic.conditions;
+                        } else {
+                          logic.conditions = [{ field: val, operator: '==', value: logic.conditions?.[0]?.value || '' }];
+                        }
+                        setEditingRule({ ...editingRule, rule_logic: logic });
+                      }}>
+                      <option value="">-- Sempre aplicar --</option>
+                      {fields.map(f => (
+                        <option key={f.field_key} value={f.field_key}>{f.field_label}</option>
+                      ))}
+                    </select>
+                    
+                    {((editingRule.rule_logic as any)?.conditions?.[0]?.field) && (
+                      <>
+                        <span style={{ alignSelf: 'center', color: 'var(--text-secondary)' }}>for igual a</span>
+                        <input className="input-field" style={{ flex: 1 }}
+                          placeholder="Valor exato"
+                          value={(editingRule.rule_logic as any)?.conditions?.[0]?.value || ''}
+                          onChange={e => {
+                            const logic = { ...(editingRule.rule_logic as any) || {} };
+                            if (logic.conditions && logic.conditions.length > 0) {
+                              logic.conditions[0].value = e.target.value;
+                              setEditingRule({ ...editingRule, rule_logic: logic });
+                            }
+                          }} />
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="input-group" style={{ marginTop: '1rem' }}>
+                  <label className="input-label">Multiplicador de Quantidade (Opcional)</label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+                    Multiplica o Preço Base pelo número digitado pelo cliente neste campo:
+                  </p>
+                  <select className="input-field"
+                    value={(editingRule.rule_logic as any)?.multiply_by_field || ''}
+                    onChange={e => {
+                      const logic = { ...(editingRule.rule_logic as any) || {} };
+                      if (!e.target.value) {
+                        delete logic.multiply_by_field;
+                      } else {
+                        logic.multiply_by_field = e.target.value;
+                      }
+                      setEditingRule({ ...editingRule, rule_logic: logic });
+                    }}>
+                    <option value="">-- Não multiplicar --</option>
+                    {fields.map(f => (
+                      <option key={f.field_key} value={f.field_key}>{f.field_label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
