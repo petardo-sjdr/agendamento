@@ -153,13 +153,6 @@ export default function ServicesAdmin() {
             <ListTree size={18} />
             Campos Globais
           </button>
-          <button className="btn" style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => {
-            const globalSvc = services.find(s => s.slug === 'global-config');
-            if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/precos`);
-          }}>
-            <DollarSign size={18} />
-            Regras Globais
-          </button>
           <button className="btn btn-primary" onClick={openCreate}>
             <Plus size={18} />
             Novo Serviço
@@ -218,17 +211,10 @@ export default function ServicesAdmin() {
               <div className="service-card-actions">
                 <button
                   className="icon-btn"
-                  title="Campos do formulário"
+                  title="Configurar Serviço (Campos e Preços)"
                   onClick={() => navigate(`/dashboard/servicos/${service.id}/campos`)}
                 >
                   <ListTree size={16} />
-                </button>
-                <button
-                  className="icon-btn"
-                  title="Regras de preço"
-                  onClick={() => navigate(`/dashboard/servicos/${service.id}/precos`)}
-                >
-                  <DollarSign size={16} />
                 </button>
                 <button
                   className="icon-btn"

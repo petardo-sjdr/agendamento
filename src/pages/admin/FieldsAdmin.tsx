@@ -36,18 +36,31 @@ export default function FieldsAdmin() {
   const [editingField, setEditingField] = useState<Partial<ServiceField> | null>(null);
   const [saving, setSaving] = useState(false);
   const [optionInput, setOptionInput] = useState('');
+  
+  const [basePrice, setBasePrice] = useState(0);
+  const [basePriceRuleId, setBasePriceRuleId] = useState<string | null>(null);
 
   useEffect(() => {
     if (serviceId) loadData();
   }, [serviceId]);
 
   const loadData = async () => {
-    const [{ data: svc }, { data: flds }] = await Promise.all([
+    const [
+      { data: svc },
+      { data: flds },
+      { data: rules }
+    ] = await Promise.all([
       supabase.from('services').select('*').eq('id', serviceId).single(),
       supabase.from('service_fields').select('*').eq('service_id', serviceId).order('display_order'),
+      supabase.from('pricing_rules').select('*').eq('service_id', serviceId).eq('rule_name', 'Preço Base do Serviço').maybeSingle()
     ]);
+    
     setService(svc);
     setFields(flds || []);
+    if (rules) {
+      setBasePrice(rules.base_price || 0);
+      setBasePriceRuleId(rules.id);
+    }
     setLoading(false);
   };
 
@@ -136,7 +149,11 @@ export default function FieldsAdmin() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Excluir este campo?')) return;
-    await supabase.from('service_fields').delete().eq('id', id);
+    const { error } = await supabase.from('service_fields').delete().eq('id', id);
+    if (error) {
+      alert('Erro ao excluir: ' + error.message);
+      return;
+    }
     setFields(prev => prev.filter(f => f.id !== id));
   };
 
@@ -160,6 +177,21 @@ export default function FieldsAdmin() {
     }
   };
 
+  const saveBasePrice = async () => {
+    if (basePriceRuleId) {
+      await supabase.from('pricing_rules').update({ base_price: basePrice }).eq('id', basePriceRuleId);
+    } else {
+      const { data } = await supabase.from('pricing_rules').insert({
+        service_id: serviceId,
+        rule_name: 'Preço Base do Serviço',
+        base_price: basePrice,
+        customer_type: 'both'
+      }).select().single();
+      if (data) setBasePriceRuleId(data.id);
+    }
+    alert('Preço Base atualizado com sucesso!');
+  };
+
   const showOptions = editingField?.field_type === 'select' || editingField?.field_type === 'radio' || editingField?.field_type === 'checkbox';
 
   if (loading) return <div className="loading-state">Carregando...</div>;
@@ -173,12 +205,28 @@ export default function FieldsAdmin() {
             Voltar
           </button>
           <h1>Campos: {service?.name}</h1>
-          <p>Configure os campos do formulário que o cliente vai preencher</p>
+          <p>Configure os campos e os preços base do serviço em um só lugar</p>
         </div>
         <button className="btn btn-primary" onClick={openCreate}>
           <Plus size={18} />
           Novo Campo
         </button>
+      </div>
+
+      {/* Preço Base Section */}
+      <div className="glass-panel" style={{ marginBottom: '2rem', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Preço Base do Serviço</h3>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Valor inicial cobrado independente das respostas (Ex: Taxa mínima de visita)</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
+          <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>R$</span>
+          <input className="input-field" type="number" step="0.01" style={{ maxWidth: '120px', margin: 0 }}
+            value={basePrice === 0 ? '' : basePrice}
+            onChange={e => setBasePrice(parseFloat(e.target.value) || 0)}
+            placeholder="0,00" />
+          <button className="btn btn-outline" onClick={saveBasePrice}>Salvar</button>
+        </div>
       </div>
 
       {/* Fields List */}
@@ -332,6 +380,24 @@ export default function FieldsAdmin() {
                 />
               </div>
 
+              {/* Multiplier for Number */}
+              {editingField.field_type === 'number' && (
+                <div className="input-group">
+                  <label className="input-label">Multiplicador de Preço (R$)</label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Opcional. Valor que será multiplicado pela quantidade digitada pelo cliente.</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>R$</span>
+                    <input className="input-field" style={{ maxWidth: '120px' }} type="number" step="0.01"
+                      value={(editingField.field_options?.[0] as any)?.multiplier || ''}
+                      onChange={e => {
+                        const val = parseFloat(e.target.value);
+                        setEditingField({ ...editingField, field_options: isNaN(val) ? [] : [{ multiplier: val }] });
+                      }}
+                      placeholder="0,00" />
+                  </div>
+                </div>
+              )}
+
               {/* Options for select/radio/checkbox */}
               {showOptions && (
                 <div className="input-group">
@@ -364,7 +430,7 @@ export default function FieldsAdmin() {
                             <span style={{ color: 'var(--text-warning)' }}>Forçar Humano</span>
                           </label>
 
-                          <button className="icon-btn icon-btn-danger" style={{ marginLeft: '0.5rem' }} onClick={() => removeOption(idx)}>
+                          <button type="button" className="icon-btn icon-btn-danger" style={{ marginLeft: '0.5rem' }} onClick={() => removeOption(idx)}>
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -377,9 +443,14 @@ export default function FieldsAdmin() {
                       value={optionInput}
                       onChange={e => setOptionInput(e.target.value)}
                       placeholder="Nova opção..."
-                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addOption())}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addOption();
+                        }
+                      }}
                     />
-                    <button className="btn btn-primary btn-sm" onClick={addOption}>Adicionar</button>
+                    <button type="button" className="btn btn-primary btn-sm" onClick={addOption}>Adicionar</button>
                   </div>
                 </div>
               )}

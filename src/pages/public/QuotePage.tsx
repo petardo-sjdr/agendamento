@@ -176,24 +176,37 @@ export default function QuotePage() {
 
       let forceManual = false;
 
-      // Add prices from field options
+      // Add prices from field options and multipliers
       fields.forEach(field => {
         const val = formData[field.field_key];
-        if (val && field.field_options) {
-          // If it's an array (checkbox), check all selected options
-          const selectedVals = Array.isArray(val) ? val : [val];
+        if (val !== undefined && val !== null && val !== '' && field.field_options) {
           
-          selectedVals.forEach(selectedVal => {
-            const opt = field.field_options.find(o => typeof o !== 'string' && o.label === selectedVal);
-            if (opt) {
-              if (opt.manual_review) {
-                forceManual = true;
-              } else if (opt.price) {
-                total += Number(opt.price);
-                breakdown.push({ label: `${field.field_label}: ${opt.label}`, value: Number(opt.price) });
-              }
+          // Number field with multiplier
+          if (field.field_type === 'number' && (field.field_options[0] as any)?.multiplier) {
+            const qty = Number(val);
+            const mult = Number((field.field_options[0] as any).multiplier);
+            if (qty > 0 && mult > 0) {
+              const calc = qty * mult;
+              total += calc;
+              breakdown.push({ label: `${field.field_label} (${qty}x)`, value: calc });
             }
-          });
+          } 
+          // Select/Checkbox/Radio fields with fixed prices
+          else if (field.field_type === 'select' || field.field_type === 'checkbox' || field.field_type === 'radio') {
+            const selectedVals = Array.isArray(val) ? val : [val];
+            
+            selectedVals.forEach(selectedVal => {
+              const opt = field.field_options.find(o => typeof o !== 'string' && (o as any).label === selectedVal);
+              if (opt) {
+                if ((opt as any).manual_review) {
+                  forceManual = true;
+                } else if ((opt as any).price) {
+                  total += Number((opt as any).price);
+                  breakdown.push({ label: `${field.field_label}: ${(opt as any).label}`, value: Number((opt as any).price) });
+                }
+              }
+            });
+          }
         }
       });
 
