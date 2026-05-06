@@ -146,19 +146,19 @@ export default function ServicesAdmin() {
           <p>Gerencie os serviços oferecidos pela PETARDO</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button className="btn btn-outline" onClick={() => {
+          <button className="btn" style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => {
             const globalSvc = services.find(s => s.slug === 'global-config');
             if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/campos`);
           }}>
             <ListTree size={18} />
-            Campos
+            Campos Globais
           </button>
-          <button className="btn btn-outline" onClick={() => {
+          <button className="btn" style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => {
             const globalSvc = services.find(s => s.slug === 'global-config');
             if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/precos`);
           }}>
             <DollarSign size={18} />
-            Regras (Globais)
+            Regras Globais
           </button>
           <button className="btn btn-primary" onClick={openCreate}>
             <Plus size={18} />
