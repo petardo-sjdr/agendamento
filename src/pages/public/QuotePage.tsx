@@ -116,6 +116,18 @@ export default function QuotePage() {
       const filteredFields = (flds || []).filter(f =>
         f.applies_to === 'both' || f.applies_to === quoteData.customer_type
       );
+      
+      // Sort: Global fields first, then by display_order
+      filteredFields.sort((a, b) => {
+        const aIsGlobal = globalConfig && a.service_id === globalConfig.id;
+        const bIsGlobal = globalConfig && b.service_id === globalConfig.id;
+        
+        if (aIsGlobal && !bIsGlobal) return -1;
+        if (!aIsGlobal && bIsGlobal) return 1;
+        
+        return (a.display_order || 0) - (b.display_order || 0);
+      });
+      
       setFields(filteredFields);
 
       // Pre-fill form data if exists
