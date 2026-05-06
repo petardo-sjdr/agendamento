@@ -151,7 +151,14 @@ export default function ServicesAdmin() {
             if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/campos`);
           }}>
             <ListTree size={18} />
-            Campos Globais
+            Campos
+          </button>
+          <button className="btn btn-outline" onClick={() => {
+            const globalSvc = services.find(s => s.slug === 'global-config');
+            if (globalSvc) navigate(`/dashboard/servicos/${globalSvc.id}/precos`);
+          }}>
+            <DollarSign size={18} />
+            Regras (Globais)
           </button>
           <button className="btn btn-primary" onClick={openCreate}>
             <Plus size={18} />
