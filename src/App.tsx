@@ -15,6 +15,7 @@ import SettingsAdmin from './pages/admin/SettingsAdmin';
 import QuotePage from './pages/public/QuotePage';
 import SchedulePage from './pages/public/SchedulePage';
 import ReviewPage from './pages/public/ReviewPage';
+import IniciarPage from './pages/public/IniciarPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
+        <Route path="/iniciar" element={<IniciarPage />} />
         <Route path="/orcamento/:token" element={<QuotePage />} />
         <Route path="/agendar/:quoteId" element={<SchedulePage />} />
         <Route path="/avaliar/:token" element={<ReviewPage />} />
