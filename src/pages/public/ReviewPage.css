@@ -1,0 +1,73 @@
+/* ============================================================
+   REVIEW PAGE
+   ============================================================ */
+
+.review-card {
+  max-width: 480px;
+}
+
+.review-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.review-title h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.review-title p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.review-title strong {
+  color: #818cf8;
+}
+
+/* Stars */
+.review-stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.review-star-btn {
+  padding: 0.25rem;
+  transition: transform 0.15s;
+}
+
+.review-star-btn:hover {
+  transform: scale(1.2);
+}
+
+.star-filled {
+  color: #fbbf24;
+  fill: #fbbf24;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.3));
+}
+
+.star-empty {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.review-rating-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  min-height: 1.5em;
+}
+
+/* Stars display in success */
+.review-stars-display {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.review-card .pub-field-group {
+  margin-bottom: 1.5rem;
+}

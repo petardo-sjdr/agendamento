@@ -1,0 +1,28 @@
+/* ============================================================
+   PLACEHOLDER PAGES
+   ============================================================ */
+.placeholder-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.placeholder-content h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.placeholder-content p {
+  max-width: 400px;
+  font-size: 0.9rem;
+}

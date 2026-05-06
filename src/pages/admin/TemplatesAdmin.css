@@ -1,0 +1,124 @@
+/* ============================================================
+   TEMPLATES ADMIN
+   ============================================================ */
+.templates-admin {
+  display: flex;
+  flex-direction: column;
+}
+
+.templates-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.templates-tip svg { color: #818cf8; flex-shrink: 0; margin-top: 0.15rem; }
+.templates-tip code {
+  background: rgba(79, 70, 229, 0.15);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  color: #a5b4fc;
+}
+
+/* List */
+.templates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.template-card {
+  padding: 1.25rem;
+  transition: all 0.2s;
+}
+
+.template-card.inactive { opacity: 0.5; }
+.template-card:hover { border-color: rgba(79, 70, 229, 0.2); }
+
+.template-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.template-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.template-icon-badge {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 70, 229, 0.1);
+  border-radius: var(--radius-sm);
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.template-title h3 { font-size: 0.95rem; font-weight: 600; }
+.template-desc { font-size: 0.75rem; color: var(--text-secondary); }
+
+.template-actions { display: flex; gap: 0.25rem; }
+
+/* Preview */
+.template-preview {
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+}
+
+.template-preview p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Edit */
+.template-edit { margin-bottom: 0.75rem; }
+
+.template-textarea {
+  width: 100%;
+  min-height: 100px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.template-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.45rem 0.85rem !important;
+  font-size: 0.8rem !important;
+  gap: 0.35rem !important;
+}
+
+/* Variables */
+.template-vars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.template-vars .badge {
+  font-size: 0.68rem !important;
+  font-family: monospace;
+}

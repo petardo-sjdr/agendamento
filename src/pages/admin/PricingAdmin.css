@@ -1,0 +1,70 @@
+/* ============================================================
+   PRICING ADMIN
+   ============================================================ */
+.pricing-admin {
+  display: flex;
+  flex-direction: column;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rule-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  gap: 1rem;
+  transition: all 0.2s;
+}
+
+.rule-card:hover {
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+.rule-card.inactive {
+  opacity: 0.5;
+}
+
+.rule-card-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rule-price-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.rule-info h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.rule-info p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 768px) {
+  .rule-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
