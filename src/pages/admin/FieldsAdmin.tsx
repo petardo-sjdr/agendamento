@@ -85,7 +85,8 @@ export default function FieldsAdmin() {
 
   const addOption = () => {
     if (!optionInput.trim() || !editingField) return;
-    const opts = [...(editingField.field_options || []), optionInput.trim()];
+    const currentOpts = editingField.field_options || [];
+    const opts = [...currentOpts, { label: optionInput.trim(), price: '', manual_review: false }];
     setEditingField({ ...editingField, field_options: opts });
     setOptionInput('');
   };
@@ -94,6 +95,13 @@ export default function FieldsAdmin() {
     if (!editingField) return;
     const opts = [...(editingField.field_options || [])];
     opts.splice(idx, 1);
+    setEditingField({ ...editingField, field_options: opts });
+  };
+
+  const updateOption = (idx: number, updates: any) => {
+    if (!editingField) return;
+    const opts = [...(editingField.field_options || [])].map(o => typeof o === 'string' ? { label: o, price: '', manual_review: false } : o);
+    opts[idx] = { ...opts[idx], ...updates };
     setEditingField({ ...editingField, field_options: opts });
   };
 
@@ -327,16 +335,43 @@ export default function FieldsAdmin() {
               {/* Options for select/radio/checkbox */}
               {showOptions && (
                 <div className="input-group">
-                  <label className="input-label">Opções</label>
-                  <div className="options-list">
-                    {(editingField.field_options || []).map((opt, idx) => (
-                      <div key={idx} className="option-item">
-                        <span>{opt}</span>
-                        <button className="option-remove" onClick={() => removeOption(idx)}>×</button>
-                      </div>
-                    ))}
+                  <label className="input-label">Opções e Preços</label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                    Adicione opções e opcionalmente um preço. Marque a caixa vermelha para "Forçar Orçamento Manual" ao escolher esta opção.
+                  </p>
+                  <div className="options-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {((editingField.field_options || []) as any[]).map((opt, idx) => {
+                      const option = typeof opt === 'string' ? { label: opt, price: '', manual_review: false } : opt;
+                      return (
+                        <div key={idx} className="option-item glass-panel" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', padding: '0.75rem' }}>
+                          <input className="input-field" style={{ flex: '1 1 150px' }}
+                            value={option.label}
+                            onChange={e => updateOption(idx, { label: e.target.value })}
+                            placeholder="Nome da opção" />
+                          
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <span style={{ color: 'var(--text-secondary)' }}>R$</span>
+                            <input className="input-field" style={{ width: '80px' }} type="number" step="0.01"
+                              value={option.price || ''}
+                              disabled={option.manual_review}
+                              onChange={e => updateOption(idx, { price: e.target.value })}
+                              placeholder="0,00" />
+                          </div>
+
+                          <label className="toggle-label" style={{ marginLeft: 'auto' }}>
+                            <input type="checkbox" checked={option.manual_review}
+                              onChange={e => updateOption(idx, { manual_review: e.target.checked, price: e.target.checked ? '' : option.price })} />
+                            <span style={{ color: 'var(--text-warning)' }}>Forçar Humano</span>
+                          </label>
+
+                          <button className="icon-btn icon-btn-danger" style={{ marginLeft: '0.5rem' }} onClick={() => removeOption(idx)}>
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="option-add-row">
+                  <div className="option-add-row" style={{ marginTop: '1rem' }}>
                     <input
                       className="input-field"
                       value={optionInput}

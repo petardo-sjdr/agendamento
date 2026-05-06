@@ -176,6 +176,27 @@ export default function QuotePage() {
 
       let forceManual = false;
 
+      // Add prices from field options
+      fields.forEach(field => {
+        const val = formData[field.field_key];
+        if (val && field.field_options) {
+          // If it's an array (checkbox), check all selected options
+          const selectedVals = Array.isArray(val) ? val : [val];
+          
+          selectedVals.forEach(selectedVal => {
+            const opt = field.field_options.find(o => typeof o !== 'string' && o.label === selectedVal);
+            if (opt) {
+              if (opt.manual_review) {
+                forceManual = true;
+              } else if (opt.price) {
+                total += Number(opt.price);
+                breakdown.push({ label: `${field.field_label}: ${opt.label}`, value: Number(opt.price) });
+              }
+            }
+          });
+        }
+      });
+
       // Apply each rule
       for (const rule of applicableRules) {
         let ruleValue = Number(rule.base_price) || 0;
@@ -340,28 +361,32 @@ export default function QuotePage() {
             onChange={e => updateField(field.field_key, e.target.value)}
           >
             <option value="">Selecione...</option>
-            {(field.field_options || []).map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
+            {(field.field_options || []).map(opt => {
+              const label = typeof opt === 'string' ? opt : opt.label;
+              return <option key={label} value={label}>{label}</option>;
+            })}
           </select>
         );
 
       case 'radio':
         return (
           <div className="pub-radio-group">
-            {(field.field_options || []).map(opt => (
-              <label key={opt} className={`pub-radio-option ${value === opt ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name={field.field_key}
-                  value={opt}
-                  checked={value === opt}
-                  onChange={() => updateField(field.field_key, opt)}
-                />
-                <span className="radio-dot" />
-                <span>{opt}</span>
-              </label>
-            ))}
+            {(field.field_options || []).map(opt => {
+              const label = typeof opt === 'string' ? opt : opt.label;
+              return (
+                <label key={label} className={`pub-radio-option ${value === label ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name={field.field_key}
+                    value={label}
+                    checked={value === label}
+                    onChange={() => updateField(field.field_key, label)}
+                  />
+                  <span className="radio-dot" />
+                  <span>{label}</span>
+                </label>
+              );
+            })}
           </div>
         );
 
@@ -369,22 +394,25 @@ export default function QuotePage() {
         return (
           <div className="pub-checkbox-group">
             {(field.field_options || []).length > 0 ? (
-              field.field_options.map(opt => (
-                <label key={opt} className={`pub-checkbox-option ${(value || []).includes(opt) ? 'selected' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={(value || []).includes(opt)}
-                    onChange={e => {
-                      const arr = [...(value || [])];
-                      if (e.target.checked) arr.push(opt);
-                      else arr.splice(arr.indexOf(opt), 1);
-                      updateField(field.field_key, arr);
-                    }}
-                  />
-                  <span className="checkbox-mark">✓</span>
-                  <span>{opt}</span>
-                </label>
-              ))
+              field.field_options.map(opt => {
+                const label = typeof opt === 'string' ? opt : opt.label;
+                return (
+                  <label key={label} className={`pub-checkbox-option ${(value || []).includes(label) ? 'selected' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={(value || []).includes(label)}
+                      onChange={e => {
+                        const arr = [...(value || [])];
+                        if (e.target.checked) arr.push(label);
+                        else arr.splice(arr.indexOf(label), 1);
+                        updateField(field.field_key, arr);
+                      }}
+                    />
+                    <span className="checkbox-mark">✓</span>
+                    <span>{label}</span>
+                  </label>
+                );
+              })
             ) : (
               <label className={`pub-checkbox-option ${value ? 'selected' : ''}`}>
                 <input
