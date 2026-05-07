@@ -29,7 +29,7 @@ export default function QuotePage() {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [calculatedPrice, setCalculatedPrice] = useState<number | null>(null);
-  const [priceBreakdown, setPriceBreakdown] = useState<Array<{ label: string; value: number }>>([]);
+  const [priceBreakdown, setPriceBreakdown] = useState<Array<{ questionLabel?: string; answerLabel: string; value: number }>>([]);
 
   useEffect(() => {
     if (token) loadQuote();
@@ -228,7 +228,7 @@ export default function QuotePage() {
       );
 
       let total = 0;
-      const breakdown: Array<{ label: string; value: number }> = [];
+      const breakdown: Array<{ questionLabel?: string; answerLabel: string; value: number }> = [];
 
       let forceManual = false;
 
@@ -244,7 +244,7 @@ export default function QuotePage() {
             if (qty > 0 && mult > 0) {
               const calc = qty * mult;
               total += calc;
-              breakdown.push({ label: `${field.field_label} (${qty}x)`, value: calc });
+              breakdown.push({ questionLabel: field.field_label, answerLabel: `${qty}x`, value: calc });
             }
           } 
           // Select/Checkbox/Radio fields with fixed prices
@@ -258,7 +258,7 @@ export default function QuotePage() {
                   forceManual = true;
                 } else if ((opt as any).price) {
                   total += Number((opt as any).price);
-                  breakdown.push({ label: `${field.field_label}: ${(opt as any).label}`, value: Number((opt as any).price) });
+                  breakdown.push({ questionLabel: field.field_label, answerLabel: (opt as any).label, value: Number((opt as any).price) });
                 }
               }
             });
@@ -316,7 +316,7 @@ export default function QuotePage() {
         }
 
         if (ruleValue > 0) {
-          breakdown.push({ label: rule.rule_name, value: ruleValue });
+          breakdown.push({ answerLabel: rule.rule_name, value: ruleValue });
           total += ruleValue;
         }
       }
@@ -633,13 +633,18 @@ export default function QuotePage() {
           {priceBreakdown.length > 0 && (
             <div className="pub-breakdown">
               {priceBreakdown.map((item, i) => (
-                <div key={i} className="pub-breakdown-item">
-                  <span>{item.label}</span>
-                  <span>R$ {item.value.toFixed(2)}</span>
+                <div key={i} className="pub-breakdown-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.25rem' }}>
+                  {item.questionLabel && (
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.questionLabel}</span>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                    <span style={{ flex: 1, paddingRight: '1rem', lineHeight: '1.4' }}>{item.answerLabel}</span>
+                    <span style={{ fontWeight: 500, whiteSpace: 'nowrap' }}>R$ {item.value.toFixed(2)}</span>
+                  </div>
                 </div>
               ))}
-              <div className="pub-breakdown-total">
-                <span>Total</span>
+              <div className="pub-breakdown-total" style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <span>Subtotal</span>
                 <span>R$ {calculatedPrice?.toFixed(2)}</span>
               </div>
             </div>
