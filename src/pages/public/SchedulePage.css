@@ -1,196 +1,220 @@
 /* ============================================================
-   SCHEDULE PAGE - Calendar & Time Selection
+   SCHEDULE PAGE — Smart Scheduling
    ============================================================ */
 
-.sched-card {
-  max-width: 480px;
-}
-
+/* Section titles */
 .sched-title {
   margin-bottom: 1.5rem;
 }
 
 .sched-title h2 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   margin-bottom: 0.2rem;
 }
 
 .sched-title p {
-  color: var(--text-secondary);
   font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
-/* ---- Calendar ---- */
-.cal-header {
+/* Found customer notice */
+.sched-found-notice {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: #10b981;
+}
+
+/* Form sections */
+.sched-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sched-section:last-of-type {
+  border-bottom: none;
   margin-bottom: 1rem;
 }
 
-.cal-month {
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.cal-nav-btn {
-  width: 34px;
-  height: 34px;
+.sched-section h3 {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f5c518;
+  margin-bottom: 1rem;
+}
+
+.sched-field {
+  margin-bottom: 0.75rem;
+}
+
+.sched-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  margin-bottom: 0.3rem;
 }
 
-.cal-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
+.sched-field-row {
+  display: flex;
+  gap: 0.75rem;
 }
 
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
+/* ---- DATE CAROUSEL ---- */
+.sched-dates-section {
   margin-bottom: 1.5rem;
 }
 
-.cal-day-name {
-  text-align: center;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  padding: 0.5rem 0;
-  text-transform: uppercase;
-}
-
-.cal-day {
-  aspect-ratio: 1;
+.sched-dates-section h3 {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: all 0.15s;
-  border: none;
-  background: transparent;
-  cursor: default;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #f5c518;
+  margin-bottom: 0.75rem;
 }
 
-.cal-day.available {
-  color: var(--text-primary);
+.sched-dates-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.sched-dates-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.sched-dates-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+.sched-date-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+  padding: 0.6rem 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  background: rgba(220, 38, 38, 0.08);
-  border: 1px solid rgba(220, 38, 38, 0.15);
+  transition: all 0.2s;
+  color: var(--text-secondary);
 }
 
-.cal-day.available:hover {
-  background: rgba(220, 38, 38, 0.2);
-  border-color: rgba(220, 38, 38, 0.4);
-  transform: scale(1.1);
+.sched-date-card:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.05);
 }
 
-.cal-day.selected {
-  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
-  color: white !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+.sched-date-card.selected {
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--text-primary);
 }
 
-.cal-day.past {
-  opacity: 0.3;
+.sched-date-weekday {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.cal-day.empty {
-  visibility: hidden;
+.sched-date-day {
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-/* ---- Time Selection ---- */
+.sched-date-month {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---- TIME GRID ---- */
 .sched-time-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .sched-time-section h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #f5c518;
+  margin-bottom: 0.75rem;
 }
 
 .sched-time-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 0.5rem;
 }
 
 .sched-time-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.4rem;
   background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: var(--font-family);
   cursor: pointer;
   transition: all 0.2s;
-  flex-wrap: wrap;
-  font-family: var(--font-family);
+  text-align: center;
 }
 
 .sched-time-btn:hover {
   border-color: rgba(220, 38, 38, 0.3);
-  background: rgba(220, 38, 38, 0.08);
+  background: rgba(220, 38, 38, 0.05);
+  color: var(--text-primary);
 }
 
 .sched-time-btn.selected {
-  border-color: rgba(220, 38, 38, 0.5);
-  background: rgba(220, 38, 38, 0.15);
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.2);
+  color: white;
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.2);
 }
 
-.sched-slots-left {
-  font-size: 0.65rem;
-  color: #34d399;
-  margin-left: auto;
-}
-
-/* ---- No slots ---- */
-.sched-no-slots {
+.sched-no-slots-text {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 1.5rem;
   color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-.sched-no-slots svg {
-  opacity: 0.4;
-  margin-bottom: 0.75rem;
-}
-
-/* ---- Confirmation ---- */
+/* ---- CONFIRM ---- */
 .sched-confirm-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 1.25rem;
-}
-
-.sched-confirm-section h3 {
-  font-size: 1rem;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
   margin-bottom: 1rem;
 }
 
 .sched-confirm-details {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-  padding: 1rem;
-  background: rgba(220, 38, 38, 0.06);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(220, 38, 38, 0.1);
+  gap: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 .sched-confirm-actions {
@@ -202,14 +226,13 @@
   flex: 1;
 }
 
-/* ---- Success ---- */
+/* ---- SUCCESS ---- */
 .sched-success {
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
 }
 
 .sched-success h2 {
-  margin-top: 0.5rem;
-  font-size: 1.4rem;
+  margin-top: 0.75rem;
 }
 
 .sched-success p {
@@ -219,18 +242,17 @@
 
 .sched-summary {
   padding: 1.25rem;
-  margin-bottom: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  margin: 1.5rem 0;
+  text-align: left;
 }
 
 .sched-summary-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 0.5rem 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .sched-summary-item svg {
@@ -241,22 +263,26 @@
 .sched-summary-item strong {
   display: block;
   color: var(--text-primary);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .sched-whatsapp-note {
-  text-align: center;
-  font-size: 0.85rem;
   color: var(--text-secondary);
-  padding: 1rem;
-  background: rgba(52, 211, 153, 0.06);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(52, 211, 153, 0.1);
+  font-size: 0.85rem;
+  margin-top: 1rem;
 }
 
+/* ---- RESPONSIVE ---- */
 @media (max-width: 480px) {
+  .sched-field-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
   .sched-time-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .sched-confirm-actions {
