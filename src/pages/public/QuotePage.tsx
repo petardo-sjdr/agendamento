@@ -152,57 +152,7 @@ export default function QuotePage() {
         return (a.display_order || 0) - (b.display_order || 0);
       });
       
-      const baseRules = (rules || []).filter(r => 
-        r.rule_name.includes('Horário Comercial') || 
-        r.rule_name.includes('Plantão') ||
-        r.rule_name.includes('Comercial') ||
-        r.rule_name.includes('Plant')
-      );
-
       let finalFields = [...filteredFields];
-
-      // Services that handle their own horário field don't get the auto-injected one
-      const servicesWithOwnHorario = ['higienizacao-caixa-dagua', 'aedes-do-bem'];
-      const hasOwnHorario = servicesWithOwnHorario.includes(svc?.slug || '');
-
-      if (baseRules && baseRules.length > 0 && !hasOwnHorario) {
-        const ruleCom = baseRules.find(r => r.rule_name.includes('Comercial'));
-        const ruleOut = baseRules.find(r => r.rule_name.includes('Plant'));
-        
-        const horarioField: ServiceField = {
-          id: 'sys-horario',
-          service_id: quoteData.service_id,
-          field_key: 'sys_horario_atendimento',
-          field_label: 'Para quando você precisa do atendimento?',
-          field_type: 'radio',
-          field_options: [
-            { label: 'Horário Comercial', price: ruleCom?.base_price || 0, manual_review: false },
-            { label: 'Plantão (Noites, Dom, Feriados)', price: ruleOut?.base_price || 0, manual_review: false }
-          ],
-          placeholder: '',
-          helper_text: 'O valor do serviço pode variar de acordo com o horário selecionado.',
-          is_required: true,
-          display_order: 1.5,
-          applies_to: 'both',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        // Find the index to insert (after global fields)
-        let insertIdx = 0;
-        if (globalSvc) {
-          while (insertIdx < finalFields.length && finalFields[insertIdx].service_id === globalSvc.id) {
-            insertIdx++;
-          }
-        }
-        finalFields.splice(insertIdx, 0, horarioField);
-      }
-
-      // Inject 'Tipo de Atendimento' as first question if not set in the quote
-      if (!quoteData.customer_type) {
-        finalFields.unshift(CUSTOMER_TYPE_FIELD);
-      }
-
       setFields(finalFields);
 
       // Pre-fill form data if exists
@@ -267,11 +217,7 @@ export default function QuotePage() {
       }
 
       const applicableRules = (rules || []).filter(r =>
-        (r.customer_type === 'both' || r.customer_type === effectiveType) &&
-        !r.rule_name.includes('Serviço') &&
-        !r.rule_name.includes('Servi') &&
-        !r.rule_name.includes('Comercial') &&
-        !r.rule_name.includes('Plant')
+        (r.customer_type === 'both' || r.customer_type === effectiveType)
       );
 
       let total = 0;
@@ -417,12 +363,6 @@ export default function QuotePage() {
         if (service?.slug === 'dedetizacao' && total < 300 && total > 0) {
           const diff = 300 - total;
           breakdown.push({ answerLabel: 'Ajuste para Valor Mínimo (R$ 300,00)', value: diff });
-          total = 300;
-        }
-        // Enforce minimum value for Desentupimento (R$ 300)
-        if (service?.slug === 'desentupimento' && total < 300 && total > 0) {
-          const diff = 300 - total;
-          breakdown.push({ answerLabel: 'Valor Base do Desentupimento (R$ 300,00)', value: diff });
           total = 300;
         }
       }
