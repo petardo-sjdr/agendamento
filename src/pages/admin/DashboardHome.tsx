@@ -76,7 +76,7 @@ export default function DashboardHome() {
       icon: CalendarDays,
       label: 'Agendamentos Hoje',
       value: stats.todayAppointments,
-      color: '#818cf8',
+      color: '#f5c518',
       bgColor: 'rgba(129, 140, 248, 0.1)',
     },
     {
@@ -104,7 +104,7 @@ export default function DashboardHome() {
       icon: Star,
       label: 'Avaliação Média',
       value: stats.avgRating > 0 ? `${stats.avgRating} ★` : '—',
-      color: '#f59e0b',
+      color: '#f5c518',
       bgColor: 'rgba(245, 158, 11, 0.1)',
     },
     {

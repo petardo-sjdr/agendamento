@@ -628,7 +628,7 @@ export default function QuotePage() {
           {/* Header */}
           <div className="pub-header">
             <div className="pub-logo">
-              <Bug size={28} />
+              <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 32, height: 32, borderRadius: '50%' }} />
               <span>PETARDO</span>
             </div>
             <span className="pub-badge">
@@ -681,7 +681,7 @@ export default function QuotePage() {
         <div className="pub-card pub-result-card animate-fade-in">
           <div className="pub-header">
             <div className="pub-logo">
-              <Bug size={24} />
+              <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 32, height: 32, borderRadius: '50%' }} />
               <span>PETARDO</span>
             </div>
           </div>
@@ -893,7 +893,7 @@ export default function QuotePage() {
       <div className="pub-card pub-form-card animate-fade-in">
         <div className="pub-header">
           <div className="pub-logo">
-            <Bug size={24} />
+            <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 32, height: 32, borderRadius: '50%' }} />
             <span>PETARDO</span>
           </div>
           <span className="pub-badge">
@@ -966,7 +966,7 @@ export default function QuotePage() {
               <X size={20} />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <FileText size={28} style={{ color: '#f59e0b', flexShrink: 0 }} />
+              <FileText size={28} style={{ color: '#f5c518', flexShrink: 0 }} />
               <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Lei Estadual nº 25.154/2025</h3>
             </div>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1rem' }}>

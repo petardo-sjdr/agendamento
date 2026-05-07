@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #0f111a 0%, #1a1035 50%, #0f111a 100%);
+  background: linear-gradient(135deg, #0a0e1a 0%, #111833 50%, #0a0e1a 100%);
   position: relative;
   overflow: hidden;
 }
@@ -21,8 +21,8 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(ellipse at 30% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
-              radial-gradient(ellipse at 70% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 30% 20%, rgba(30, 58, 110, 0.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(220, 38, 38, 0.06) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -71,13 +71,13 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #f59e0b;
+  color: #dc2626;
 }
 
 .pub-logo span {
   font-weight: 800;
   font-size: 1.1rem;
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, #dc2626, #f5c518);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -104,17 +104,17 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(129, 140, 248, 0.05));
-  border: 1px solid rgba(79, 70, 229, 0.3);
-  color: #818cf8;
+  background: linear-gradient(135deg, rgba(30, 58, 110, 0.3), rgba(30, 58, 110, 0.05));
+  border: 1px solid rgba(30, 58, 110, 0.4);
+  color: #f5c518;
   margin-bottom: 1.25rem;
-  box-shadow: 0 0 30px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 30px rgba(30, 58, 110, 0.2);
 }
 
 .pub-intro-hero h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(to right, #fff, #c7d2fe);
+  background: linear-gradient(to right, #fff, #93c5fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -123,8 +123,8 @@
   display: flex;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: rgba(79, 70, 229, 0.06);
-  border: 1px solid rgba(79, 70, 229, 0.15);
+  background: rgba(30, 58, 110, 0.1);
+  border: 1px solid rgba(30, 58, 110, 0.2);
   border-radius: var(--radius-lg);
   margin-bottom: 2rem;
   color: var(--text-secondary);
@@ -133,7 +133,7 @@
 }
 
 .pub-intro-text svg {
-  color: #818cf8;
+  color: #f5c518;
   flex-shrink: 0;
   margin-top: 0.15rem;
 }
@@ -154,7 +154,7 @@
 }
 
 .pub-form-title-icon {
-  color: #818cf8;
+  color: #f5c518;
 }
 
 .pub-form-title h2 {
@@ -182,7 +182,7 @@
 
 .pub-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4f46e5, #818cf8);
+  background: linear-gradient(90deg, #dc2626, #f5c518);
   border-radius: 2px;
   transition: width 0.4s ease;
 }
@@ -232,8 +232,8 @@
 
 .pub-input:focus {
   outline: none;
-  border-color: #818cf8;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .pub-input.has-error {
@@ -295,14 +295,14 @@
 
 .pub-radio-option:hover,
 .pub-checkbox-option:hover {
-  border-color: rgba(79, 70, 229, 0.3);
-  background: rgba(79, 70, 229, 0.05);
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.05);
 }
 
 .pub-radio-option.selected,
 .pub-checkbox-option.selected {
-  border-color: rgba(79, 70, 229, 0.5);
-  background: rgba(79, 70, 229, 0.1);
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--text-primary);
 }
 
@@ -322,7 +322,7 @@
 }
 
 .pub-radio-option.selected .radio-dot {
-  border-color: #818cf8;
+  border-color: #dc2626;
 }
 
 .pub-radio-option.selected .radio-dot::after {
@@ -332,7 +332,7 @@
   left: 3px;
   width: 8px;
   height: 8px;
-  background: #818cf8;
+  background: #dc2626;
   border-radius: 50%;
 }
 
@@ -351,8 +351,8 @@
 }
 
 .pub-checkbox-option.selected .checkbox-mark {
-  background: #818cf8;
-  border-color: #818cf8;
+  background: #dc2626;
+  border-color: #dc2626;
   color: white;
 }
 
@@ -380,14 +380,14 @@
 }
 
 .pub-btn-primary {
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: white;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
 }
 
 .pub-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.45);
 }
 
 .pub-btn-outline {
@@ -497,7 +497,7 @@
 
 /* Calculator spinner */
 .pub-calc-spinner {
-  color: #818cf8;
+  color: #f5c518;
 }
 
 /* ---- ERROR CARD ---- */

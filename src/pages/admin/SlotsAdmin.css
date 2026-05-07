@@ -31,9 +31,9 @@
 .slots-tab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
 
 .slots-tab.active {
-  background: rgba(79, 70, 229, 0.15);
+  background: rgba(220, 38, 38, 0.15);
   color: #a5b4fc;
-  border: 1px solid rgba(79, 70, 229, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 /* Info banner */
@@ -88,7 +88,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: #818cf8;
+  color: #f5c518;
 }
 
 .weekly-day-slots { display: flex; flex-direction: column; gap: 0.4rem; }

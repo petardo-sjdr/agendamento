@@ -66,7 +66,7 @@
 }
 
 .brand-logo {
-  color: #f59e0b;
+  color: #f5c518;
   filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
 }
 
@@ -74,7 +74,7 @@
   display: block;
   font-size: 1.25rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, #f5c518, #ef4444);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
@@ -123,13 +123,13 @@
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(79, 70, 229, 0.05));
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(220, 38, 38, 0.05));
   color: #a5b4fc;
-  border: 1px solid rgba(79, 70, 229, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .nav-item.active svg {
-  color: #818cf8;
+  color: #f5c518;
 }
 
 /* ---- Footer ---- */

@@ -22,11 +22,11 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(99, 102, 241, 0.05));
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(99, 102, 241, 0.05));
   border-radius: 50%;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(79, 70, 229, 0.3);
-  box-shadow: 0 0 20px rgba(79, 70, 229, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.15);
 }
 
 .logo-icon {

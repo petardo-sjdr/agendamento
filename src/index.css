@@ -1,15 +1,18 @@
 :root {
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --bg-color: #0f111a;
-  --surface-color: #1a1d2d;
-  --surface-color-hover: #23273b;
-  --primary-color: #4f46e5;
-  --primary-color-hover: #6366f1;
+  --bg-color: #0a0e1a;
+  --surface-color: #111833;
+  --surface-color-hover: #1a2244;
+  --primary-color: #1e3a6e;
+  --primary-color-hover: #2a4d8f;
+  --accent-color: #dc2626;
+  --accent-color-hover: #ef4444;
+  --highlight-color: #f5c518;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --border-color: #2e334d;
+  --border-color: #1e2d50;
   --success-color: #10b981;
-  --danger-color: #ef4444;
+  --danger-color: #dc2626;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -105,15 +108,15 @@ h3 { font-size: 1.5rem; }
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: white;
-  box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+  box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.35);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-color-hover);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.39);
+  box-shadow: 0 6px 20px 0 rgba(220, 38, 38, 0.45);
 }
 
 /* Inputs */
@@ -142,8 +145,8 @@ h3 { font-size: 1.5rem; }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
 }
 
 /* Animations */

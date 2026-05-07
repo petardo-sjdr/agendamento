@@ -87,7 +87,7 @@
 }
 
 .service-card:hover {
-  border-color: rgba(79, 70, 229, 0.3);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .service-card.inactive {
@@ -116,7 +116,7 @@
   height: 44px;
   border-radius: var(--radius-md);
   flex-shrink: 0;
-  color: #818cf8;
+  color: #f5c518;
 }
 
 .service-info h3 {
@@ -294,9 +294,9 @@
 }
 
 .icon-option.selected {
-  background: rgba(79, 70, 229, 0.2);
-  color: #818cf8;
-  border-color: rgba(79, 70, 229, 0.4);
+  background: rgba(220, 38, 38, 0.2);
+  color: #f5c518;
+  border-color: rgba(220, 38, 38, 0.4);
 }
 
 /* ---- Modal Actions ---- */

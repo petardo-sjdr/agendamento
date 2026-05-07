@@ -93,7 +93,7 @@
 }
 
 .quick-action:hover {
-  background: rgba(79, 70, 229, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   color: #a5b4fc;
   transform: translateY(-2px);
 }

@@ -173,7 +173,7 @@ export default function IniciarPage() {
           <Bug size={28} />
           <span style={{ fontSize: '1.3rem' }}>PETARDO</span>
         </div>
-        <Loader2 size={44} className="spin" style={{ color: '#818cf8', marginBottom: '1.5rem' }} />
+        <Loader2 size={44} className="spin" style={{ color: '#f5c518', marginBottom: '1.5rem' }} />
         <h2 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Preparando seu orçamento...</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Aguarde um momento</p>
       </div>

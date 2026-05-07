@@ -39,7 +39,7 @@
 }
 
 .field-card:hover {
-  border-color: rgba(79, 70, 229, 0.3);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .field-card-left {
@@ -88,8 +88,8 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: rgba(79, 70, 229, 0.1);
-  color: #818cf8;
+  background: rgba(220, 38, 38, 0.1);
+  color: #f5c518;
   flex-shrink: 0;
 }
 
@@ -129,7 +129,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.3rem 0.6rem;
-  background: rgba(79, 70, 229, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   color: var(--text-primary);

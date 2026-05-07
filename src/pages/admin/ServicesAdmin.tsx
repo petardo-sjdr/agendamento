@@ -191,7 +191,7 @@ export default function ServicesAdmin() {
                 </div>
                 <div className="service-icon-badge" style={{
                   background: service.is_active
-                    ? 'linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(129, 140, 248, 0.05))'
+                    ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(129, 140, 248, 0.05))'
                     : 'rgba(255,255,255,0.03)'
                 }}>
                   {IconComponent(service.icon_name)}

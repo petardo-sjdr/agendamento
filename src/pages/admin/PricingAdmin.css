@@ -22,7 +22,7 @@
 }
 
 .rule-card:hover {
-  border-color: rgba(79, 70, 229, 0.3);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .rule-card.inactive {

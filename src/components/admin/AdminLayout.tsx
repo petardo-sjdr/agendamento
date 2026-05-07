@@ -44,7 +44,7 @@ export default function AdminLayout() {
       <aside className={`admin-sidebar glass-panel ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <Bug size={28} className="brand-logo" />
+            <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 36, height: 36, borderRadius: '50%' }} />
             <div>
               <span className="brand-name">PETARDO</span>
               <span className="brand-subtitle">Painel Admin</span>
@@ -85,7 +85,7 @@ export default function AdminLayout() {
             <Menu size={22} />
           </button>
           <div className="topbar-brand-mobile">
-            <Bug size={20} />
+            <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 24, height: 24, borderRadius: '50%' }} />
             <span>PETARDO</span>
           </div>
         </header>
