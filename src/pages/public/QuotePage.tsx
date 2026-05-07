@@ -137,9 +137,7 @@ export default function QuotePage() {
         .in('service_id', serviceIds)
         .order('display_order');
 
-      const filteredFields = (flds || []).filter(f =>
-        !quoteData.customer_type || f.applies_to === 'both' || f.applies_to === quoteData.customer_type
-      );
+      const filteredFields = flds || [];
       
       // Sort: Global fields first, then by display_order
       filteredFields.sort((a, b) => {
@@ -206,9 +204,8 @@ export default function QuotePage() {
 
       // Determine effective customer type (from quote or from form selection)
       const selectedTypeOption = formData['sys_tipo_atendimento'] || '';
-      const effectiveType = quote!.customer_type || 
-        (selectedTypeOption.includes('Residencial') ? 'residential' : 
-         selectedTypeOption.includes('Comercial') ? 'commercial' : 'residential');
+      const effectiveType = (selectedTypeOption.includes('Residencial') ? 'residential' : 
+         selectedTypeOption.includes('Comercial') ? 'commercial' : null) || quote!.customer_type || 'residential';
 
       // Save customer_type to quote if not set
       if (!quote!.customer_type && effectiveType) {
@@ -920,21 +917,50 @@ export default function QuotePage() {
               <p>Entre em contato pelo WhatsApp para solicitar seu orçamento.</p>
             </div>
           ) : (
-            fields.map(field => (
-              <div key={field.id} className="pub-field-group">
-                <label className="pub-label">
-                  {field.field_label}
-                  {field.is_required && <span className="pub-required">*</span>}
-                </label>
-                {renderField(field)}
-                {field.helper_text && (
-                  <span className="pub-helper">{field.helper_text}</span>
-                )}
-                {errors[field.field_key] && (
-                  <span className="pub-error">{errors[field.field_key]}</span>
-                )}
-              </div>
-            ))
+            fields.map(field => {
+              // Dynamic effective type for render
+              const selectedTypeOption = formData['sys_tipo_atendimento'] || '';
+              const renderEffectiveType = (selectedTypeOption.includes('Residencial') ? 'residential' : 
+                                           selectedTypeOption.includes('Comercial') ? 'commercial' : null) 
+                                           || quote?.customer_type || 'residential';
+
+              // Check if field applies to the current effective type
+              if (field.applies_to && field.applies_to !== 'both' && field.applies_to !== renderEffectiveType) {
+                return null;
+              }
+
+              // Check if field should be visible based on dependencies
+              let isVisible = true;
+              if (field.field_logic && typeof field.field_logic === 'object') {
+                const logic = field.field_logic as any;
+                if (logic.show_if && logic.show_if.field) {
+                  const depValue = formData[logic.show_if.field];
+                  if (logic.show_if.operator === '==') isVisible = depValue === logic.show_if.value;
+                  if (logic.show_if.operator === '!=') isVisible = depValue !== logic.show_if.value;
+                  if (logic.show_if.operator === 'contains' && Array.isArray(depValue)) {
+                    isVisible = depValue.includes(logic.show_if.value);
+                  }
+                }
+              }
+
+              if (!isVisible) return null;
+
+              return (
+                <div key={field.id} className="pub-field-group">
+                  <label className="pub-label">
+                    {field.field_label}
+                    {field.is_required && <span className="pub-required">*</span>}
+                  </label>
+                  {renderField(field)}
+                  {field.helper_text && (
+                    <span className="pub-helper">{field.helper_text}</span>
+                  )}
+                  {errors[field.field_key] && (
+                    <span className="pub-error">{errors[field.field_key]}</span>
+                  )}
+                </div>
+              );
+            })
           )}
         </div>
 
