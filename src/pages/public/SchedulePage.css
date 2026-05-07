@@ -274,6 +274,56 @@
   margin-top: 1rem;
 }
 
+/* ---- CHECKBOX ---- */
+.pub-checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.pub-checkbox-option:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.pub-checkbox-option.selected {
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--text-primary);
+}
+
+.pub-checkbox-option input {
+  display: none;
+}
+
+.checkbox-mark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.pub-checkbox-option.selected .checkbox-mark {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
 /* ---- RESPONSIVE ---- */
 @media (max-width: 480px) {
   .sched-field-row {

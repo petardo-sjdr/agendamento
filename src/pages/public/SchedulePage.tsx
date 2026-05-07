@@ -460,9 +460,9 @@ export default function SchedulePage() {
           {/* Block 3: Companion */}
           <div className="sched-section">
             <h3><Phone size={16} /> Quem vai acompanhar a equipe?</h3>
-            <label className={`pub-checkbox-option ${euMesmo ? 'selected' : ''}`} onClick={() => handleEuMesmo(!euMesmo)}>
-              <input type="checkbox" checked={euMesmo} readOnly />
-              <span className="checkbox-mark">{euMesmo ? '✓' : ''}</span>
+            <label className={`pub-checkbox-option ${euMesmo ? 'selected' : ''}`}>
+              <input type="checkbox" checked={euMesmo} onChange={(e) => handleEuMesmo(e.target.checked)} />
+              <span className="checkbox-mark">✓</span>
               <span>Eu mesmo</span>
             </label>
             {!euMesmo && (
