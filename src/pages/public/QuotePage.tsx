@@ -137,7 +137,11 @@ export default function QuotePage() {
 
       let finalFields = [...filteredFields];
 
-      if (baseRules && baseRules.length > 0) {
+      // Services that handle their own horário field don't get the auto-injected one
+      const servicesWithOwnHorario = ['higienizacao-caixa-dagua'];
+      const hasOwnHorario = servicesWithOwnHorario.includes(svc?.slug || '');
+
+      if (baseRules && baseRules.length > 0 && !hasOwnHorario) {
         const ruleCom = baseRules.find(r => r.rule_name === 'Preço Base - Horário Comercial');
         const ruleOut = baseRules.find(r => r.rule_name === 'Preço Base - Plantão');
         
@@ -267,6 +271,48 @@ export default function QuotePage() {
         }
       });
 
+      // ---- CUSTOM: Higienização de Caixa D'Água (matrix pricing) ----
+      if (service?.slug === 'higienizacao-caixa-dagua' && !forceManual) {
+        const priceMatrix: Record<string, Record<string, number>> = {
+          '100 Litros':   { 'plastico': 60,  'amianto': 70 },
+          '500 Litros':   { 'plastico': 250, 'amianto': 280 },
+          '1.000 Litros': { 'plastico': 350, 'amianto': 380 },
+          '1.500 Litros': { 'plastico': 450, 'amianto': 480 },
+          '2.000 Litros': { 'plastico': 550, 'amianto': 580 },
+          '3.000 Litros': { 'plastico': 650, 'amianto': 680 },
+          '4.000 Litros': { 'plastico': 750, 'amianto': 780 },
+          '5.000 Litros': { 'plastico': 850, 'amianto': -1 },
+        };
+
+        const litragem = formData['litragem_caixa'] || '';
+        const materialRaw = formData['material_caixa'] || '';
+        const materialKey = materialRaw.toLowerCase().includes('plástico') || materialRaw.toLowerCase().includes('plastico')
+          ? 'plastico'
+          : materialRaw.toLowerCase().includes('amianto')
+            ? 'amianto'
+            : null;
+
+        if (litragem && materialKey && priceMatrix[litragem]?.[materialKey] !== undefined) {
+          let basePrice = priceMatrix[litragem][materialKey];
+          
+          if (basePrice === -1) {
+            forceManual = true;
+          } else {
+            const horario = formData['horario_caixa'] || '';
+            const isPlantao = horario.toLowerCase().includes('plantão') || horario.toLowerCase().includes('plantao');
+
+            if (isPlantao) {
+              const extra = Math.round(basePrice * 0.20);
+              breakdown.push({ questionLabel: `${litragem} — ${materialRaw}`, answerLabel: 'Valor base', value: basePrice });
+              breakdown.push({ answerLabel: 'Acréscimo Plantão (+20%)', value: extra });
+              total += basePrice + extra;
+            } else {
+              breakdown.push({ questionLabel: `${litragem} — ${materialRaw}`, answerLabel: 'Horário Comercial', value: basePrice });
+              total += basePrice;
+            }
+          }
+        }
+      }
       // Apply each rule
       for (const rule of applicableRules) {
         let ruleValue = Number(rule.base_price) || 0;
@@ -693,6 +739,22 @@ export default function QuotePage() {
               <strong style={{ color: 'var(--text-primary)', display: 'block', marginTop: '1rem' }}>Formas de Pagamento:</strong>
               <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <li><strong>PIX:</strong> 10% de Desconto!</li>
+                <li><strong>Cartão de Crédito:</strong> Até 6x sem juros.</li>
+              </ul>
+            </div>
+          )}
+
+          {service?.slug === 'higienizacao-caixa-dagua' && calculatedPrice !== null && calculatedPrice > 0 && (
+            <div className="pub-result-notes" style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'left' }}>
+              <strong style={{ color: 'var(--text-primary)' }}>Detalhes do Serviço:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li>Tempo médio de execução: <strong>~120 minutos</strong>.</li>
+                <li>Higienização completa com <strong>produtos autorizados pela Vigilância Sanitária</strong>.</li>
+              </ul>
+              <p style={{ margin: '0.75rem 0 0', fontSize: '0.8rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>Nota: Valores estimados. Dependem da análise de acesso e peculiaridades no local.</p>
+              <strong style={{ color: 'var(--text-primary)', display: 'block', marginTop: '1rem' }}>Formas de Pagamento:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li><strong>PIX / Dinheiro:</strong> 10% de Desconto!</li>
                 <li><strong>Cartão de Crédito:</strong> Até 6x sem juros.</li>
               </ul>
             </div>
