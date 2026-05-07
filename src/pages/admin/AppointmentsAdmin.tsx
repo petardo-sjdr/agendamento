@@ -18,7 +18,7 @@ export default function AppointmentsAdmin() {
       .select(`
         *,
         services (name),
-        customers (full_name, phone, endereco_rua, endereco_numero, endereco_bairro, endereco_cidade)
+        customers (name, phone, endereco_rua, endereco_numero, endereco_bairro, endereco_cidade)
       `)
       .order('scheduled_date', { ascending: false })
       .order('scheduled_time_start', { ascending: false });
@@ -103,7 +103,7 @@ export default function AppointmentsAdmin() {
                     <td>
                       {a.customers ? (
                         <>
-                          <div className="appt-service">{a.customers.full_name} ({a.customers.phone})</div>
+                          <div className="appt-service">{a.customers.name} ({a.customers.phone})</div>
                           <div className="appt-date" style={{ fontSize: '0.7rem' }}>
                             {a.customers.endereco_rua}, {a.customers.endereco_numero} - {a.customers.endereco_bairro} - {a.customers.endereco_cidade}
                           </div>

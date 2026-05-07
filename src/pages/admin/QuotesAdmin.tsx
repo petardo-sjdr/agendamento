@@ -18,7 +18,7 @@ export default function QuotesAdmin() {
       .select(`
         *,
         services (name),
-        customers (full_name, phone)
+        customers (name, phone)
       `)
       .order('created_at', { ascending: false });
 
@@ -100,7 +100,7 @@ export default function QuotesAdmin() {
                   <td>
                     {q.customers ? (
                       <>
-                        <div>{q.customers.full_name}</div>
+                        <div>{q.customers.name}</div>
                         <div className="quote-date">{q.customers.phone}</div>
                       </>
                     ) : (

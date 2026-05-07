@@ -68,7 +68,7 @@ export default function CustomersAdmin() {
               {customers.map(c => (
                 <tr key={c.id}>
                   <td>
-                    <div className="cust-name">{c.full_name}</div>
+                    <div className="cust-name">{c.name}</div>
                     <div className="cust-detail">{c.cpf_cnpj || c.document || '-'}</div>
                   </td>
                   <td>

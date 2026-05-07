@@ -17,7 +17,7 @@ export default function ReviewsAdmin() {
       .from('reviews')
       .select(`
         *,
-        customers (full_name, phone),
+        customers (name, phone),
         appointments (
           scheduled_date,
           services (name)
@@ -92,7 +92,7 @@ export default function ReviewsAdmin() {
                     <td>
                       {r.customers ? (
                         <>
-                          <div style={{ fontWeight: 500 }}>{r.customers.full_name}</div>
+                          <div style={{ fontWeight: 500 }}>{r.customers.name}</div>
                           <div className="review-date">{r.customers.phone}</div>
                         </>
                       ) : (
