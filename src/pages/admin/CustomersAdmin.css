@@ -1,0 +1,78 @@
+.customers-admin {
+  animation: fadeIn 0.3s ease;
+}
+
+.customers-list {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.customers-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.customers-table th {
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.customers-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.customers-table tr:last-child td {
+  border-bottom: none;
+}
+
+.customers-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cust-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cust-detail {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.cust-type {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+.cust-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.customers-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+}
+
+.customers-empty svg {
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
