@@ -140,7 +140,7 @@ export default function QuotePage() {
         const ruleCom = baseRules.find(r => r.rule_name === 'Preço Base - Horário Comercial');
         const ruleOut = baseRules.find(r => r.rule_name === 'Preço Base - Plantão');
         
-        finalFields.push({
+        const horarioField: ServiceField = {
           id: 'sys-horario',
           service_id: quoteData.service_id,
           field_key: 'sys_horario_atendimento',
@@ -153,11 +153,20 @@ export default function QuotePage() {
           placeholder: '',
           helper_text: 'O valor do serviço pode variar de acordo com o horário selecionado.',
           is_required: true,
-          display_order: 9999,
+          display_order: 1.5,
           applies_to: 'both',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        });
+        };
+
+        // Find the index to insert (after global fields)
+        let insertIdx = 0;
+        if (globalSvc) {
+          while (insertIdx < finalFields.length && finalFields[insertIdx].service_id === globalSvc.id) {
+            insertIdx++;
+          }
+        }
+        finalFields.splice(insertIdx, 0, horarioField);
       }
 
       setFields(finalFields);
