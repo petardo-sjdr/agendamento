@@ -6,7 +6,7 @@ import {
   Bug, Wrench, Droplets, Droplet, Flame, MousePointer,
   Hexagon, Moon, Layers, CloudRain, Shield, Zap,
   Thermometer, Leaf, Home, Building2, Truck,
-  ChevronRight, CheckCircle, MessageCircle, Info, Loader2
+  ChevronRight, CheckCircle, MessageCircle, Info, Loader2, X, ExternalLink, FileText, Star
 } from 'lucide-react';
 import './QuotePage.css';
 
@@ -30,6 +30,7 @@ export default function QuotePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [calculatedPrice, setCalculatedPrice] = useState<number | null>(null);
   const [priceBreakdown, setPriceBreakdown] = useState<Array<{ questionLabel?: string; answerLabel: string; value: number }>>([]);
+  const [showLawModal, setShowLawModal] = useState(false);
 
   useEffect(() => {
     if (token) loadQuote();
@@ -334,7 +335,7 @@ export default function QuotePage() {
 
       // If no rules matched, use a default
       if (total === 0 && applicableRules.length === 0) {
-        breakdown.push({ label: 'Valor base do serviço', value: 0 });
+        breakdown.push({ answerLabel: 'Valor base do serviço', value: 0 });
       }
 
       // Simulate a small delay for UX
@@ -456,7 +457,12 @@ export default function QuotePage() {
                     name={field.field_key}
                     value={label}
                     checked={value === label}
-                    onChange={() => updateField(field.field_key, label)}
+                    onChange={() => {
+                      updateField(field.field_key, label);
+                      if (typeof opt !== 'string' && (opt as any).show_modal === 'lei_pragas') {
+                        setShowLawModal(true);
+                      }
+                    }}
                   />
                   <span className="radio-dot" />
                   <span>{label}</span>
@@ -700,19 +706,60 @@ export default function QuotePage() {
             </div>
           )}
 
-          {/* Actions */}
-          <div className="pub-result-actions">
-            {calculatedPrice !== null && calculatedPrice > 0 && (
-              <button className="pub-btn pub-btn-primary pub-btn-lg" onClick={handleApprove}>
-                <CheckCircle size={20} />
-                Aprovar e Agendar
+          {/* Commercial Dedetização: Dual Options */}
+          {service?.slug === 'dedetizacao' && quote?.customer_type === 'commercial' && calculatedPrice !== null && calculatedPrice > 0 ? (
+            <div className="pub-result-actions">
+              {/* Option 1: Pontual */}
+              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '1.25rem', marginBottom: '0.75rem', border: '1px solid rgba(16,185,129,0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <CheckCircle size={18} style={{ color: '#10b981' }} />
+                  <strong style={{ color: 'var(--text-primary)' }}>Opção 1: Serviço Pontual</strong>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 0.75rem' }}>Aplicação única para resolver o problema atual. Validade de 30 dias.</p>
+                <button className="pub-btn pub-btn-primary" style={{ width: '100%' }} onClick={handleApprove}>
+                  <CheckCircle size={18} />
+                  Aprovar e Agendar — R$ {calculatedPrice.toFixed(2)}
+                </button>
+              </div>
+
+              {/* Option 2: Plano Anual */}
+              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '1.25rem', marginBottom: '0.75rem', border: '1px solid rgba(139,92,246,0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <Star size={18} style={{ color: '#8b5cf6' }} />
+                  <strong style={{ color: 'var(--text-primary)' }}>Opção 2: Plano Anual (Blindagem)</strong>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 0.25rem' }}>Monitoramento mensal com renovação automática do certificado.</p>
+                <p style={{ fontSize: '0.85rem', color: '#8b5cf6', fontWeight: 600, margin: '0 0 0.75rem' }}>A partir de R$ 250,00/mês</p>
+                <button className="pub-btn pub-btn-outline" style={{ width: '100%' }} onClick={handleReject}>
+                  <MessageCircle size={18} />
+                  Falar com Consultor
+                </button>
+              </div>
+
+              {/* Payment info */}
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'left' }}>
+                <strong style={{ color: 'var(--text-primary)' }}>💲 Formas de Pagamento:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                  <li><strong>PIX / Dinheiro:</strong> 10% de desconto!</li>
+                  <li><strong>Cartão de Crédito:</strong> Até 6x sem juros.</li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            /* Default Actions */
+            <div className="pub-result-actions">
+              {calculatedPrice !== null && calculatedPrice > 0 && (
+                <button className="pub-btn pub-btn-primary pub-btn-lg" onClick={handleApprove}>
+                  <CheckCircle size={20} />
+                  Aprovar e Agendar
+                </button>
+              )}
+              <button className="pub-btn pub-btn-outline" onClick={handleReject}>
+                <MessageCircle size={18} />
+                Falar com Atendente
               </button>
-            )}
-            <button className="pub-btn pub-btn-outline" onClick={handleReject}>
-              <MessageCircle size={18} />
-              Falar com Atendente
-            </button>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -788,6 +835,46 @@ export default function QuotePage() {
           </button>
         )}
       </div>
+
+      {/* Law Modal */}
+      {showLawModal && (
+        <div className="pub-modal-overlay" onClick={() => setShowLawModal(false)}>
+          <div className="pub-modal-content animate-fade-in" onClick={e => e.stopPropagation()}>
+            <button className="pub-modal-close" onClick={() => setShowLawModal(false)}>
+              <X size={20} />
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+              <FileText size={28} style={{ color: '#f59e0b', flexShrink: 0 }} />
+              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Lei Estadual nº 25.154/2025</h3>
+            </div>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1rem' }}>
+              Em Minas Gerais, todo estabelecimento comercial é <strong>obrigado por lei</strong> a contratar serviços de controle de pragas apenas de empresas devidamente <strong>licenciadas pela Vigilância Sanitária</strong>.
+            </p>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              <strong style={{ color: 'var(--text-primary)' }}>A lei exige:</strong>
+              <ul style={{ margin: '0.5rem 0 1rem', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <li><strong>Monitoramento periódico</strong> (mínimo mensal) contra pragas urbanas.</li>
+                <li><strong>Certificado de execução</strong> com detalhes do serviço (pragas-alvo, produtos utilizados, prazos de garantia).</li>
+                <li><strong>Garantia de 30 dias</strong> para estabelecimentos alimentícios, hospitalares, hoteleiros e de grande concentração de pessoas.</li>
+                <li>Uso exclusivo de <strong>produtos registrados no Ministério da Saúde</strong>, aplicados por profissional habilitado.</li>
+                <li><strong>Multa e suspensão de alvará</strong> para estabelecimentos que descumprirem.</li>
+              </ul>
+            </div>
+            <a
+              href="https://www.almg.gov.br/legislacao-mineira/texto/LEI/25154/2025/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontSize: '0.85rem', textDecoration: 'none', marginBottom: '1rem' }}
+            >
+              <ExternalLink size={14} />
+              Ler lei completa na ALMG
+            </a>
+            <button className="pub-btn pub-btn-primary" style={{ width: '100%', marginTop: '0.5rem' }} onClick={() => setShowLawModal(false)}>
+              Entendi, continuar orçamento
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
