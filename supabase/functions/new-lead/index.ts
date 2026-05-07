@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
     }
 
     // Get app URL from admin settings or env
-    const appUrl = Deno.env.get('APP_URL') || 'https://petardo.vercel.app'
+    const appUrl = Deno.env.get('APP_URL') || 'https://petardo-sjdr.vercel.app'
     const quoteUrl = `${appUrl}/orcamento/${quote.token}`
 
     return new Response(

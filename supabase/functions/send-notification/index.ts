@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     }
 
     // Build template variables
-    const appUrl = Deno.env.get('APP_URL') || 'https://petardo.vercel.app'
+    const appUrl = Deno.env.get('APP_URL') || 'https://petardo-sjdr.vercel.app'
     const variables: Record<string, string> = {
       nome: customer.name,
       servico: service?.name || custom_data.servico || '',
