@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import {
   LayoutDashboard, Wrench, FileText, CalendarDays,
   Users, Clock, MessageSquare, Star,
-  Settings, LogOut, Bug, Menu, X
+  Settings, LogOut, Menu, X
 } from 'lucide-react';
 import { useState } from 'react';
 import './AdminLayout.css';

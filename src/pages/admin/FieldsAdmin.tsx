@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import type { Service, ServiceField, FieldType, AppliesTo } from '../../lib/types';
 import {
-  ArrowLeft, Plus, Edit, Trash2, GripVertical,
+  ArrowLeft, Plus, Edit, Trash2,
   Type, Hash, List, CheckSquare, Circle,
   AlignLeft, Phone, Mail, ChevronUp, ChevronDown
 } from 'lucide-react';

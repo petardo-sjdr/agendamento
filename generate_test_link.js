@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const supabaseUrl = 'https://pwozjqwgieqjpatzwids.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b3pqcXdnaWVxanBhdHp3aWRzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODAwMDcyOCwiZXhwIjoyMDkzNTc2NzI4fQ.Q8pba4pV5V3051GQhgBsw5dxQ0Lic4ZcZXE022Y4Q1I';
@@ -25,12 +26,14 @@ async function run() {
 }
 
 async function insertQuote(customerId, serviceId) {
-  const token = 'teste-desentupimento-' + Math.floor(Math.random() * 1000);
+  const token = crypto.randomUUID();
+  const id = crypto.randomUUID();
   
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   const { data, error } = await supabase.from('quotes').insert({
+    id: id,
     customer_id: customerId,
     service_id: serviceId,
     customer_type: 'residential',
@@ -42,7 +45,7 @@ async function insertQuote(customerId, serviceId) {
   if (error) {
     console.error('Error creating quote:', error);
   } else {
-    console.log('Test Link: http://localhost:5173/orcamento/' + token);
+    console.log('Test Link: http://localhost:5173/orcamento/' + data.token);
   }
 }
 run();

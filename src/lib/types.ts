@@ -25,7 +25,7 @@ export interface ServiceField {
   field_label: string;
   field_key: string;
   field_type: FieldType;
-  field_options: string[];
+  field_options: any[];
   placeholder: string | null;
   helper_text: string | null;
   is_required: boolean;

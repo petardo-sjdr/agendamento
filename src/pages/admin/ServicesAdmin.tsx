@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabase';
 import type { Service } from '../../lib/types';
 import {
   Plus, Edit, Trash2, Eye, EyeOff, GripVertical,
-  Search, ListTree, DollarSign, ChevronRight,
+  Search, ListTree, ChevronRight,
   Wrench, Bug, Droplets, Droplet, Flame, MousePointer,
   Hexagon, Moon, Layers, CloudRain, Shield, Zap,
   Thermometer, Leaf, Home, Building2, Truck

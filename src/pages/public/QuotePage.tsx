@@ -488,7 +488,7 @@ export default function QuotePage() {
             onChange={e => updateField(field.field_key, e.target.value)}
           >
             <option value="">Selecione...</option>
-            {(field.field_options || []).map(opt => {
+            {(field.field_options || []).map((opt: any) => {
               const label = typeof opt === 'string' ? opt : opt.label;
               return <option key={label} value={label}>{label}</option>;
             })}
@@ -498,7 +498,7 @@ export default function QuotePage() {
       case 'radio':
         return (
           <div className="pub-radio-group">
-            {(field.field_options || []).map(opt => {
+            {(field.field_options || []).map((opt: any) => {
               const label = typeof opt === 'string' ? opt : opt.label;
               return (
                 <label key={label} className={`pub-radio-option ${value === label ? 'selected' : ''}`}>
@@ -526,7 +526,7 @@ export default function QuotePage() {
         return (
           <div className="pub-checkbox-group">
             {(field.field_options || []).length > 0 ? (
-              field.field_options.map(opt => {
+              field.field_options.map((opt: any) => {
                 const label = typeof opt === 'string' ? opt : opt.label;
                 return (
                   <label key={label} className={`pub-checkbox-option ${(value || []).includes(label) ? 'selected' : ''}`}>
