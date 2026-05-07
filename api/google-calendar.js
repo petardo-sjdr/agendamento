@@ -4,7 +4,16 @@ const CALENDAR_ID = 'petardo.sjdr@gmail.com';
 
 const CREDENTIALS = {
   type: 'service_account',
-  project_id: 'petardo-calendar',
+  project_id: (() => {
+    let key = process.env.GOOGLE_PRIVATE_KEY || '';
+    if (key.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(key);
+        if (parsed.project_id) return parsed.project_id;
+      } catch (e) {}
+    }
+    return 'petardo-calendar';
+  })(),
   private_key: (() => {
     let key = process.env.GOOGLE_PRIVATE_KEY || '';
     if (key.startsWith('{')) {
@@ -23,8 +32,26 @@ const CREDENTIALS = {
     }
     return key;
   })(),
-  client_email: 'petardo-calendar@petardo-calendar.iam.gserviceaccount.com',
-  client_id: '107316861424006297966',
+  client_email: (() => {
+    let key = process.env.GOOGLE_PRIVATE_KEY || '';
+    if (key.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(key);
+        if (parsed.client_email) return parsed.client_email;
+      } catch (e) {}
+    }
+    return 'petardo-calendar@petardo-calendar.iam.gserviceaccount.com';
+  })(),
+  client_id: (() => {
+    let key = process.env.GOOGLE_PRIVATE_KEY || '';
+    if (key.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(key);
+        if (parsed.client_id) return parsed.client_id;
+      } catch (e) {}
+    }
+    return '107316861424006297966';
+  })(),
   auth_uri: 'https://accounts.google.com/o/oauth2/auth',
   token_uri: 'https://oauth2.googleapis.com/token',
 };
