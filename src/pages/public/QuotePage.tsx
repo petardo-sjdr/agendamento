@@ -104,8 +104,12 @@ export default function QuotePage() {
         .eq('slug', 'global-config')
         .single();
       
+      // Services that manage their own location field skip global config
+      const servicesSkipGlobal = ['aedes-do-bem'];
+      const skipGlobal = servicesSkipGlobal.includes(svc?.slug || '');
+
       const serviceIds = [quoteData.service_id];
-      if (globalSvc) serviceIds.push(globalSvc.id);
+      if (globalSvc && !skipGlobal) serviceIds.push(globalSvc.id);
 
       // Load fields filtered by customer_type (Global + Specific)
       const { data: flds } = await supabase
@@ -138,7 +142,7 @@ export default function QuotePage() {
       let finalFields = [...filteredFields];
 
       // Services that handle their own horário field don't get the auto-injected one
-      const servicesWithOwnHorario = ['higienizacao-caixa-dagua'];
+      const servicesWithOwnHorario = ['higienizacao-caixa-dagua', 'aedes-do-bem'];
       const hasOwnHorario = servicesWithOwnHorario.includes(svc?.slug || '');
 
       if (baseRules && baseRules.length > 0 && !hasOwnHorario) {
@@ -710,12 +714,35 @@ export default function QuotePage() {
           )}
 
           {/* If no breakdown (price = 0) */}
-          {(calculatedPrice === 0 || calculatedPrice === null) && (
+          {(calculatedPrice === 0 || calculatedPrice === null) && service?.slug === 'aedes-do-bem' ? (
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '2.5rem' }}>🦟🚧</span>
+                <h3 style={{ marginTop: '0.5rem', color: 'var(--text-primary)' }}>Qualificação Concluída!</h3>
+              </div>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+                Coletamos as informações para o pré-projeto do seu programa <strong style={{ color: 'var(--text-primary)' }}>Aedes do Bem™</strong>. Como é uma solução personalizada, nossa especialista <strong style={{ color: '#10b981' }}>Virgínia</strong> entrará em contato para agendar a visita técnica e apresentar o dimensionamento ideal.
+              </p>
+              <div className="pub-result-notes" style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--text-primary)' }}>Sobre o Aedes do Bem™:</strong>
+                <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <li><strong>Biotecnologia inovadora</strong> — não é veneno, não é fumacê.</li>
+                  <li>Focada exclusivamente no <strong>Aedes aegypti</strong> (Dengue, Zika, Chikungunya).</li>
+                  <li><strong>Programa contínuo:</strong> instalação + monitoramento mensal.</li>
+                  <li>Redução progressiva e controle da população do mosquito.</li>
+                </ul>
+              </div>
+              <button className="pub-btn pub-btn-primary pub-btn-lg" onClick={handleReject}>
+                <MessageCircle size={20} />
+                Falar com Especialista
+              </button>
+            </div>
+          ) : (calculatedPrice === 0 || calculatedPrice === null) && service?.slug !== 'aedes-do-bem' ? (
             <div className="pub-no-price">
               <p>Precisamos analisar seu caso com mais detalhes.</p>
               <p>Um atendente entrará em contato em breve!</p>
             </div>
-          )}
+          ) : null}
 
           {/* Notes per service */}
           {service?.slug === 'desentupimento' && calculatedPrice !== null && calculatedPrice > 0 && (
