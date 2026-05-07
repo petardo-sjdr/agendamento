@@ -760,13 +760,46 @@ export default function QuotePage() {
             </div>
           )}
 
+          {service?.slug === 'caca-vazamentos' && calculatedPrice !== null && calculatedPrice > 0 && (
+            <div className="pub-result-notes" style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'left' }}>
+              <strong style={{ color: 'var(--text-primary)' }}>ℹ️ Como funciona:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                <li>Utilizamos tecnologia de <strong>Geofone</strong> (escuta ultrassônica) para localizar o ponto exato, evitando quebra-quebra desnecessário.</li>
+                <li>O valor base contempla a localização de <strong>1 ponto de vazamento</strong> em condições normais.</li>
+                <li>Casos de alta complexidade ou múltiplos pontos podem chegar a <strong>R$ 800,00</strong>.</li>
+              </ul>
+
+              <strong style={{ color: '#10b981', display: 'block', marginTop: '1rem' }}>🛡️ Garantia de Transparência:</strong>
+              <p style={{ margin: '0.4rem 0 0', lineHeight: 1.6 }}>Se o vazamento <strong>não for localizado</strong> após toda a varredura técnica, você paga apenas a taxa de visita. O valor da detecção <strong>não é cobrado</strong>.</p>
+
+              <strong style={{ color: 'var(--text-primary)', display: 'block', marginTop: '1rem' }}>🔧 Sobre o Reparo:</strong>
+              <p style={{ margin: '0.4rem 0 0', lineHeight: 1.6 }}>Detecção e reparo são etapas separadas. O orçamento do conserto é apresentado <strong>após</strong> a identificação do problema e só é executado com sua aprovação.</p>
+
+              <strong style={{ color: 'var(--text-primary)', display: 'block', marginTop: '1rem' }}>💲 Formas de Pagamento:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li><strong>PIX / Dinheiro:</strong> 10% de Desconto!</li>
+                <li><strong>Cartão de Crédito:</strong> Até 6x sem juros.</li>
+              </ul>
+            </div>
+          )}
+
           {/* Price Display */}
-          {calculatedPrice !== null && calculatedPrice > 0 && (
+          {calculatedPrice !== null && calculatedPrice > 0 && service?.slug === 'caca-vazamentos' ? (
+            <div className="pub-price-display">
+              <span className="pub-price-label">Valor Estimado da Detecção</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <span className="pub-price-value" style={{ fontSize: '1.75rem' }}>R$ {calculatedPrice.toFixed(2)}</span>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>a</span>
+                <span className="pub-price-value" style={{ fontSize: '1.75rem' }}>R$ 800,00</span>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>O valor final depende da complexidade técnica encontrada no local.</p>
+            </div>
+          ) : calculatedPrice !== null && calculatedPrice > 0 ? (
             <div className="pub-price-display">
               <span className="pub-price-label">Valor Total</span>
               <span className="pub-price-value">R$ {calculatedPrice.toFixed(2)}</span>
             </div>
-          )}
+          ) : null}
 
           {/* Commercial Dedetização: Dual Options */}
           {service?.slug === 'dedetizacao' && quote?.customer_type === 'commercial' && calculatedPrice !== null && calculatedPrice > 0 ? (
