@@ -119,8 +119,8 @@ export default function QuotePage() {
       
       // Sort: Global fields first, then by display_order
       filteredFields.sort((a, b) => {
-        const aIsGlobal = globalConfig && a.service_id === globalConfig.id;
-        const bIsGlobal = globalConfig && b.service_id === globalConfig.id;
+        const aIsGlobal = globalSvc && a.service_id === globalSvc.id;
+        const bIsGlobal = globalSvc && b.service_id === globalSvc.id;
         
         if (aIsGlobal && !bIsGlobal) return -1;
         if (!aIsGlobal && bIsGlobal) return 1;
