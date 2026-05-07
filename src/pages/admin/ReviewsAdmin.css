@@ -1,0 +1,70 @@
+.reviews-admin {
+  animation: fadeIn 0.3s ease;
+}
+
+.reviews-list {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.reviews-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.reviews-table th {
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.reviews-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.reviews-table tr:last-child td {
+  border-bottom: none;
+}
+
+.reviews-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.review-date {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.review-stars {
+  color: #f5c518;
+  letter-spacing: 2px;
+  font-size: 1rem;
+}
+
+.review-comment {
+  font-style: italic;
+  color: var(--text-secondary);
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.reviews-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+}
+
+.reviews-empty svg {
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
