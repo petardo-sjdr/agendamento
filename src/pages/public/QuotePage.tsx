@@ -644,6 +644,18 @@ export default function QuotePage() {
             </div>
           )}
 
+          {/* Notes per service */}
+          {service?.slug === 'desentupimento' && calculatedPrice !== null && calculatedPrice > 0 && (
+            <div className="pub-result-notes" style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'left' }}>
+              <strong style={{ color: 'var(--text-primary)' }}>Importante:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li>O valor do desentupimento (R$ 300,00) cobre <strong>até 5 metros</strong> de tubulação.</li>
+                <li>Custo de <strong>R$ 30,00</strong> por metro adicional.</li>
+                <li>A metragem exata somente pode ser determinada durante a visita técnica.</li>
+              </ul>
+            </div>
+          )}
+
           {/* Price Display */}
           {calculatedPrice !== null && calculatedPrice > 0 && (
             <div className="pub-price-display">
