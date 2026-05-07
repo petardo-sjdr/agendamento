@@ -6,7 +6,18 @@ const CREDENTIALS = {
   type: 'service_account',
   project_id: 'petardo-calendar',
   private_key_id: 'e30101bede89703f25bdf87159ab47853269ab2e',
-  private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
+  private_key: (() => {
+    let key = process.env.GOOGLE_PRIVATE_KEY || '';
+    if (key.startsWith('"') && key.endsWith('"')) key = key.slice(1, -1);
+    key = key.replace(/\\n/g, '\n');
+    if (!key.includes('\n')) {
+      key = key.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n');
+      key = key.replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----\n');
+      key = key.replace(/([^\n]{64})/g, '$1\n');
+      key = key.replace(/\n\n/g, '\n');
+    }
+    return key;
+  })(),
   client_email: 'petardo-calendar@petardo-calendar.iam.gserviceaccount.com',
   client_id: '107316861424006297966',
   auth_uri: 'https://accounts.google.com/o/oauth2/auth',
