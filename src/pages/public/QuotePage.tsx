@@ -411,10 +411,16 @@ export default function QuotePage() {
       if (forceManual) {
         total = 0; // Forces the UI to show manual review state
       } else {
-        // Enforce minimum value for Dedetização
+        // Enforce minimum value for Dedetização (R$ 300)
         if (service?.slug === 'dedetizacao' && total < 300 && total > 0) {
           const diff = 300 - total;
           breakdown.push({ answerLabel: 'Ajuste para Valor Mínimo (R$ 300,00)', value: diff });
+          total = 300;
+        }
+        // Enforce minimum value for Desentupimento (R$ 300)
+        if (service?.slug === 'desentupimento' && total < 300 && total > 0) {
+          const diff = 300 - total;
+          breakdown.push({ answerLabel: 'Valor Base do Desentupimento (R$ 300,00)', value: diff });
           total = 300;
         }
       }
