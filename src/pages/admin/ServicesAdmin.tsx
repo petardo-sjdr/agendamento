@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import type { Service } from '../../lib/types';
 import {
-  Plus, Edit, Trash2, Eye, EyeOff, GripVertical,
+  Plus, Edit, Trash2, Eye, EyeOff, GripVertical, Link,
   Search, ListTree, ChevronRight,
   Wrench, Bug, Droplets, Droplet, Flame, MousePointer,
   Hexagon, Moon, Layers, CloudRain, Shield, Zap,
@@ -129,6 +129,28 @@ export default function ServicesAdmin() {
     }
   };
 
+  const handleGenerateTestLink = async (serviceId: string) => {
+    try {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const { data, error } = await supabase.from('quotes').insert({
+        service_id: serviceId,
+        customer_type: 'residential',
+        status: 'pending',
+        expires_at: tomorrow.toISOString()
+      }).select().single();
+
+      if (error) throw error;
+
+      const link = `${window.location.origin}/orcamento/${data.token}`;
+      await navigator.clipboard.writeText(link);
+      alert('Link de teste gerado e copiado para a área de transferência!\n\n' + link);
+    } catch (e: any) {
+      alert('Erro ao gerar link de teste: ' + e.message);
+    }
+  };
+
   const filtered = services.filter(s =>
     s.slug !== 'global-config' && s.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -209,6 +231,13 @@ export default function ServicesAdmin() {
               </div>
 
               <div className="service-card-actions">
+                <button
+                  className="icon-btn"
+                  title="Gerar Link de Orçamento"
+                  onClick={() => handleGenerateTestLink(service.id)}
+                >
+                  <Link size={16} />
+                </button>
                 <button
                   className="icon-btn"
                   title="Configurar Serviço (Campos e Preços)"
