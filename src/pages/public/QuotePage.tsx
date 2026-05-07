@@ -153,8 +153,10 @@ export default function QuotePage() {
       });
       
       const baseRules = (rules || []).filter(r => 
-        r.rule_name === 'Preço Base - Horário Comercial' || 
-        r.rule_name === 'Preço Base - Plantão'
+        r.rule_name.includes('Horário Comercial') || 
+        r.rule_name.includes('Plantão') ||
+        r.rule_name.includes('Comercial') ||
+        r.rule_name.includes('Plant')
       );
 
       let finalFields = [...filteredFields];
@@ -164,8 +166,8 @@ export default function QuotePage() {
       const hasOwnHorario = servicesWithOwnHorario.includes(svc?.slug || '');
 
       if (baseRules && baseRules.length > 0 && !hasOwnHorario) {
-        const ruleCom = baseRules.find(r => r.rule_name === 'Preço Base - Horário Comercial');
-        const ruleOut = baseRules.find(r => r.rule_name === 'Preço Base - Plantão');
+        const ruleCom = baseRules.find(r => r.rule_name.includes('Comercial'));
+        const ruleOut = baseRules.find(r => r.rule_name.includes('Plant'));
         
         const horarioField: ServiceField = {
           id: 'sys-horario',
@@ -266,9 +268,10 @@ export default function QuotePage() {
 
       const applicableRules = (rules || []).filter(r =>
         (r.customer_type === 'both' || r.customer_type === effectiveType) &&
-        r.rule_name !== 'Preço Base do Serviço' &&
-        r.rule_name !== 'Preço Base - Horário Comercial' &&
-        r.rule_name !== 'Preço Base - Plantão'
+        !r.rule_name.includes('Serviço') &&
+        !r.rule_name.includes('Servi') &&
+        !r.rule_name.includes('Comercial') &&
+        !r.rule_name.includes('Plant')
       );
 
       let total = 0;
