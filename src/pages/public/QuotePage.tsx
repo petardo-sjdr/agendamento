@@ -152,11 +152,10 @@ export default function QuotePage() {
         return (a.display_order || 0) - (b.display_order || 0);
       });
       
-      const { data: baseRules } = await supabase
-        .from('pricing_rules')
-        .select('*')
-        .eq('service_id', quoteData.service_id)
-        .in('rule_name', ['Preço Base - Horário Comercial', 'Preço Base - Plantão']);
+      const baseRules = (rules || []).filter(r => 
+        r.rule_name === 'Preço Base - Horário Comercial' || 
+        r.rule_name === 'Preço Base - Plantão'
+      );
 
       let finalFields = [...filteredFields];
 
