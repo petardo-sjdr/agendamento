@@ -323,6 +323,13 @@ export default function QuotePage() {
 
       if (forceManual) {
         total = 0; // Forces the UI to show manual review state
+      } else {
+        // Enforce minimum value for Dedetização
+        if (service?.slug === 'dedetizacao' && total < 300 && total > 0) {
+          const diff = 300 - total;
+          breakdown.push({ answerLabel: 'Ajuste para Valor Mínimo (R$ 300,00)', value: diff });
+          total = 300;
+        }
       }
 
       // If no rules matched, use a default
@@ -666,6 +673,21 @@ export default function QuotePage() {
                 <li>O valor do desentupimento (R$ 300,00) cobre <strong>até 5 metros</strong> de tubulação.</li>
                 <li>Custo de <strong>R$ 30,00</strong> por metro adicional.</li>
                 <li>A metragem exata somente pode ser determinada durante a visita técnica.</li>
+              </ul>
+            </div>
+          )}
+
+          {service?.slug === 'dedetizacao' && calculatedPrice !== null && calculatedPrice > 0 && (
+            <div className="pub-result-notes" style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'left' }}>
+              <strong style={{ color: 'var(--text-primary)' }}>Detalhes do Serviço:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li>Utilizamos apenas produtos <strong>sem cheiro forte</strong>.</li>
+                <li>Nossos produtos são <strong>100% seguros para pets e animais domésticos</strong>.</li>
+              </ul>
+              <strong style={{ color: 'var(--text-primary)', display: 'block', marginTop: '1rem' }}>Formas de Pagamento:</strong>
+              <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <li><strong>PIX:</strong> 10% de Desconto!</li>
+                <li><strong>Cartão de Crédito:</strong> Até 6x sem juros.</li>
               </ul>
             </div>
           )}
