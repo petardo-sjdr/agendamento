@@ -5,9 +5,14 @@ const CALENDAR_ID = 'petardo.sjdr@gmail.com';
 const CREDENTIALS = {
   type: 'service_account',
   project_id: 'petardo-calendar',
-  private_key_id: 'e30101bede89703f25bdf87159ab47853269ab2e',
   private_key: (() => {
     let key = process.env.GOOGLE_PRIVATE_KEY || '';
+    if (key.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(key);
+        if (parsed.private_key) key = parsed.private_key;
+      } catch (e) {}
+    }
     if (key.startsWith('"') && key.endsWith('"')) key = key.slice(1, -1);
     key = key.replace(/\\n/g, '\n');
     if (!key.includes('\n')) {
