@@ -18,6 +18,25 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
 
 type Step = 'loading' | 'intro' | 'form' | 'calculating' | 'result' | 'approved' | 'error' | 'expired';
 
+const CUSTOMER_TYPE_FIELD: ServiceField = {
+  id: 'sys-tipo-atendimento',
+  service_id: 'system',
+  field_key: 'sys_tipo_atendimento',
+  field_label: 'O serviço é para um imóvel residencial ou comercial?',
+  field_type: 'radio',
+  field_options: [
+    { label: 'Residencial (Casa / Apartamento)', value: 'residential', price: 0, manual_review: false },
+    { label: 'Comercial (Empresa / Loja)', value: 'commercial', price: 0, manual_review: false },
+  ],
+  placeholder: '',
+  helper_text: '',
+  is_required: true,
+  display_order: -10,
+  applies_to: 'both',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
 export default function QuotePage() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -111,7 +130,7 @@ export default function QuotePage() {
       const serviceIds = [quoteData.service_id];
       if (globalSvc && !skipGlobal) serviceIds.push(globalSvc.id);
 
-      // Load fields filtered by customer_type (Global + Specific)
+      // Load fields (filter by customer_type if available, else show all)
       const { data: flds } = await supabase
         .from('service_fields')
         .select('*')
@@ -119,7 +138,7 @@ export default function QuotePage() {
         .order('display_order');
 
       const filteredFields = (flds || []).filter(f =>
-        f.applies_to === 'both' || f.applies_to === quoteData.customer_type
+        !quoteData.customer_type || f.applies_to === 'both' || f.applies_to === quoteData.customer_type
       );
       
       // Sort: Global fields first, then by display_order
@@ -178,6 +197,11 @@ export default function QuotePage() {
         finalFields.splice(insertIdx, 0, horarioField);
       }
 
+      // Inject 'Tipo de Atendimento' as first question if not set in the quote
+      if (!quoteData.customer_type) {
+        finalFields.unshift(CUSTOMER_TYPE_FIELD);
+      }
+
       setFields(finalFields);
 
       // Pre-fill form data if exists
@@ -229,8 +253,20 @@ export default function QuotePage() {
         .eq('is_active', true)
         .order('priority');
 
+      // Determine effective customer type (from quote or from form selection)
+      const selectedTypeOption = formData['sys_tipo_atendimento'] || '';
+      const effectiveType = quote!.customer_type || 
+        (selectedTypeOption.includes('Residencial') ? 'residential' : 
+         selectedTypeOption.includes('Comercial') ? 'commercial' : 'residential');
+
+      // Save customer_type to quote if not set
+      if (!quote!.customer_type && effectiveType) {
+        await supabase.from('quotes').update({ customer_type: effectiveType }).eq('id', quote!.id);
+        setQuote(prev => prev ? { ...prev, customer_type: effectiveType } : prev);
+      }
+
       const applicableRules = (rules || []).filter(r =>
-        (r.customer_type === 'both' || r.customer_type === quote!.customer_type) &&
+        (r.customer_type === 'both' || r.customer_type === effectiveType) &&
         r.rule_name !== 'Preço Base do Serviço' &&
         r.rule_name !== 'Preço Base - Horário Comercial' &&
         r.rule_name !== 'Preço Base - Plantão'
@@ -631,9 +667,11 @@ export default function QuotePage() {
               <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 32, height: 32, borderRadius: '50%' }} />
               <span>PETARDO</span>
             </div>
-            <span className="pub-badge">
-              {quote?.customer_type === 'residential' ? '🏠 Residencial' : '🏢 Comercial'}
-            </span>
+            {quote?.customer_type && (
+              <span className="pub-badge">
+                {quote.customer_type === 'residential' ? '🏠 Residencial' : '🏢 Comercial'}
+              </span>
+            )}
           </div>
 
           {/* Service Icon & Title */}
@@ -896,9 +934,11 @@ export default function QuotePage() {
             <img src="/petardo-logo.png" alt="PETARDO" style={{ width: 32, height: 32, borderRadius: '50%' }} />
             <span>PETARDO</span>
           </div>
-          <span className="pub-badge">
-            {quote?.customer_type === 'residential' ? '🏠 Residencial' : '🏢 Comercial'}
-          </span>
+          {quote?.customer_type ? (
+            <span className="pub-badge">
+              {quote.customer_type === 'residential' ? '🏠 Residencial' : '🏢 Comercial'}
+            </span>
+          ) : null}
         </div>
 
         <div className="pub-form-title">

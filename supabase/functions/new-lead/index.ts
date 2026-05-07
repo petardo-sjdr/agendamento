@@ -5,9 +5,9 @@
 // Payload from BotConversa:
 // {
 //   "phone": "5531999999999",
-//   "name": "João Silva",
-//   "customer_type": "residential" | "commercial",
 //   "service_slug": "dedetizacao",
+//   "name": "João Silva" (optional),
+//   "customer_type": "residential" | "commercial" (optional),
 //   "email": "joao@email.com" (optional)
 // }
 //
@@ -37,12 +37,12 @@ Deno.serve(async (req) => {
     const body = await req.json()
     const { phone, name, customer_type, service_slug, email } = body
 
-    // Validate required fields
-    if (!phone || !name || !customer_type || !service_slug) {
+    // Validate required fields (only phone and service_slug are required now)
+    if (!phone || !service_slug) {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Campos obrigatórios: phone, name, customer_type, service_slug' 
+          error: 'Campos obrigatórios: phone, service_slug' 
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
@@ -87,20 +87,23 @@ Deno.serve(async (req) => {
 
     if (existingCustomer) {
       customerId = existingCustomer.id
-      // Update name if needed
-      await supabase
-        .from('customers')
-        .update({ name, email: email || undefined, customer_type })
-        .eq('id', customerId)
+      // Update name/type only if provided
+      const updates: Record<string, any> = {}
+      if (name) updates.name = name
+      if (email) updates.email = email
+      if (customer_type) updates.customer_type = customer_type
+      if (Object.keys(updates).length > 0) {
+        await supabase.from('customers').update(updates).eq('id', customerId)
+      }
     } else {
-      // Create new customer
+      // Create new customer with minimal data
       const { data: newCustomer, error: custErr } = await supabase
         .from('customers')
         .insert({
-          name,
+          name: name || 'Cliente',
           phone: normalizedPhone,
           email: email || null,
-          customer_type,
+          ...(customer_type ? { customer_type } : {}),
           source: 'whatsapp',
         })
         .select('id')
@@ -115,13 +118,13 @@ Deno.serve(async (req) => {
       customerId = newCustomer.id
     }
 
-    // Create quote
+    // Create quote (customer_type may be null, will be set in the form)
     const { data: quote, error: quoteErr } = await supabase
       .from('quotes')
       .insert({
         customer_id: customerId,
         service_id: service.id,
-        customer_type,
+        ...(customer_type ? { customer_type } : {}),
         status: 'pending',
       })
       .select('id, token')

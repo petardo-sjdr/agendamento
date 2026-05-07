@@ -19,10 +19,7 @@ export default function IniciarPage() {
   const processLink = async () => {
     try {
       const phone = searchParams.get('phone') || searchParams.get('telefone') || '';
-      const name = searchParams.get('name') || searchParams.get('nome') || 'Cliente';
-      const customerType = searchParams.get('tipo') || searchParams.get('type') || 'residential';
       const serviceSlug = searchParams.get('servico') || searchParams.get('service') || '';
-      const email = searchParams.get('email') || '';
 
       // Validate required fields
       if (!phone) {
@@ -74,24 +71,13 @@ export default function IniciarPage() {
 
       if (existingCustomer) {
         customerId = existingCustomer.id;
-        // Update name/type
-        await supabase
-          .from('customers')
-          .update({
-            name,
-            customer_type: customerType,
-            ...(email ? { email } : {}),
-          })
-          .eq('id', customerId);
       } else {
-        // Create new customer
+        // Create new customer with minimal data (just phone)
         const { data: newCustomer, error: custErr } = await supabase
           .from('customers')
           .insert({
-            name,
+            name: 'Cliente',
             phone: normalizedPhone,
-            email: email || null,
-            customer_type: customerType,
             source: 'whatsapp',
           })
           .select('id')
@@ -122,13 +108,12 @@ export default function IniciarPage() {
         return;
       }
 
-      // Create new quote
+      // Create new quote (no customer_type yet - will be asked in the form)
       const { data: quote, error: quoteErr } = await supabase
         .from('quotes')
         .insert({
           customer_id: customerId,
           service_id: service.id,
-          customer_type: customerType,
           status: 'pending',
         })
         .select('id, token')
