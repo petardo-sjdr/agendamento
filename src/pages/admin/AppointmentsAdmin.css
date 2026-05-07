@@ -1,0 +1,83 @@
+.appointments-admin {
+  animation: fadeIn 0.3s ease;
+}
+
+.appointments-list {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.appointments-table th {
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.appointments-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.appointments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.appointments-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.appt-date {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.appt-service {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.appt-status {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-scheduled { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.status-confirmed { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.status-in_progress { background: rgba(245, 197, 24, 0.15); color: #f5c518; }
+.status-completed { background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); }
+.status-cancelled { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.status-no_show { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+
+.appt-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.appointments-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+}
+
+.appointments-empty svg {
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
