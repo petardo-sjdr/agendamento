@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
           name: name || 'Cliente',
           phone: normalizedPhone,
           email: email || null,
-          ...(customer_type ? { customer_type } : {}),
+          customer_type: customer_type || 'residential',
           source: 'whatsapp',
         })
         .select('id')
@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
       .insert({
         customer_id: customerId,
         service_id: service.id,
-        ...(customer_type ? { customer_type } : {}),
+        customer_type: customer_type || 'residential',
         status: 'pending',
       })
       .select('id, token')

@@ -78,6 +78,7 @@ export default function IniciarPage() {
           .insert({
             name: 'Cliente',
             phone: normalizedPhone,
+            customer_type: 'residential',
             source: 'whatsapp',
           })
           .select('id')
@@ -114,6 +115,7 @@ export default function IniciarPage() {
         .insert({
           customer_id: customerId,
           service_id: service.id,
+          customer_type: 'residential',
           status: 'pending',
         })
         .select('id, token')
