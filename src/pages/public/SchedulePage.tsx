@@ -23,6 +23,7 @@ interface CustomerData {
   ponto_referencia: string;
   nome_acompanhante: string;
   whatsapp_acompanhante: string;
+  telefone_cliente?: string;
 }
 
 interface TimeSlot {
@@ -83,6 +84,7 @@ export default function SchedulePage() {
           endereco_cidade: cust.endereco_cidade || '',
           endereco_complemento: cust.endereco_complemento || '',
           ponto_referencia: cust.ponto_referencia || '',
+          telefone_cliente: cust.phone || '',
         }));
         if (cust.cpf_cnpj) setCustomerFound(true);
       }
@@ -261,6 +263,7 @@ export default function SchedulePage() {
       const description = [
         `📋 Serviço: ${service.name}`,
         `👤 Cliente: ${customer.nome_completo}`,
+        `📞 Telefone: ${customer.telefone_cliente || 'Não informado'}`,
         `📄 CPF/CNPJ: ${customer.cpf_cnpj}`,
         `📍 Endereço: ${endereco}`,
         `📌 Ponto de Referência: ${customer.ponto_referencia}`,
